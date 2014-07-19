@@ -37,6 +37,13 @@ public class PerformanceCalcContainer {
 			}
 		};
 
+		final MathFunc<Float> rSqrt = new MathFunc<Float>() {
+			@Override
+			public Float f(Float a) {
+				return (float) (1 / Math.sqrt(a));
+			}
+		};
+
 		final MathFunc<Float> divX = new MathFunc<Float>() {
 			@Override
 			public Float f(Float a) {
@@ -76,5 +83,11 @@ public class PerformanceCalcContainer {
 
 		scanner.reduceY2X(source, xSqrSum, addSqr);
 		scanner.reduceX2Y(source, ySqrSum, addSqr);
+
+		final DataMatrix<Float> xSimBase = new DataMatrix<Float>(x, 1);
+		final DataMatrix<Float> ySimBase = new DataMatrix<Float>(1, y);
+
+		scanner.map(xSqrSum, xSimBase, rSqrt);
+		scanner.map(ySqrSum, ySimBase, rSqrt);
 	}
 }
