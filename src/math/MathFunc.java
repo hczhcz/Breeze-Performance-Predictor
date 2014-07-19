@@ -1,5 +1,5 @@
 package math;
 
-public interface MathFunc<T> {
+public interface MathFunc<T extends Number> {
 	public T f(T a);
 }

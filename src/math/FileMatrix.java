@@ -1,6 +1,6 @@
 package math;
 
-public class FileMatrix<T> extends Matrix<T> {
+public class FileMatrix<T extends Number> extends DataMatrix<T> {
 	public FileMatrix(int x, int y) {
 		super(x, y);
 	}
@@ -8,7 +8,7 @@ public class FileMatrix<T> extends Matrix<T> {
 	public void loadFromFile(String fileName) {
 		//
 	}
-	
+
 	public void saveToFile(String fileName) {
 		//
 	}
