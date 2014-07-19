@@ -1,4 +1,4 @@
-package math;
+package matrix_math;
 
 public interface AbstractMatrix<T extends Number> {
 	public T get(int x, int y);

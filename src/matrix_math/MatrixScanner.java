@@ -1,4 +1,4 @@
-package math;
+package matrix_math;
 
 public class MatrixScanner<T extends Number> {
 	public void reduceX2Y(AbstractMatrix<T> source, AbstractMatrix<T> dest,

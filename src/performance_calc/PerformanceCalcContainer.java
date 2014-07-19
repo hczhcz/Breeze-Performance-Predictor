@@ -1,10 +1,10 @@
-package performancecalc;
+package performance_calc;
 
-import math.AbstractMatrix;
-import math.DataMatrix;
-import math.MathFunc;
-import math.MathOper;
-import math.MatrixScanner;
+import matrix_math.AbstractMatrix;
+import matrix_math.DataMatrix;
+import matrix_math.MathFunc;
+import matrix_math.MathOper;
+import matrix_math.MatrixScanner;
 
 public class PerformanceCalcContainer {
 	protected void calc(AbstractMatrix<Float> source, AbstractMatrix<Float> dest) {

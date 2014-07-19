@@ -1,4 +1,4 @@
-package math;
+package matrix_math;
 
 public class FileMatrix<T extends Number> extends DataMatrix<T> {
 	public FileMatrix(int x, int y) {

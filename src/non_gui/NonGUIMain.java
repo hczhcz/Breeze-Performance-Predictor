@@ -1,4 +1,4 @@
-package nongui;
+package non_gui;
 
 public class NonGUIMain {
 
