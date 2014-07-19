@@ -3,8 +3,8 @@ package matrix_math;
 import java.util.ArrayList;
 
 public class DataMatrix<T extends Number> implements AbstractMatrix<T> {
-	protected int _xSize;
-	protected int _ySize;
+	private final int _xSize;
+	private final int _ySize;
 	protected ArrayList<ArrayList<T>> data;
 
 	public DataMatrix(int x, int y) {
