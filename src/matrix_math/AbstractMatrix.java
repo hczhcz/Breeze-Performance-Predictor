@@ -8,4 +8,12 @@ public interface AbstractMatrix<T extends Number> {
 	public int xSize();
 
 	public int ySize();
+
+	public AbstractMatrix<T> getLineX2Y(int x);
+
+	public AbstractMatrix<T> getLineY2X(int y);
+
+	public void setLineX2Y(int x, AbstractMatrix<T> line);
+
+	public void setLineY2X(int y, AbstractMatrix<T> line);
 }

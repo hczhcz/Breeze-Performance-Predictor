@@ -64,4 +64,18 @@ public class MatrixScanner<T extends Number> {
 			}
 		}
 	}
+
+	protected void each(AbstractMatrix<T> sourceA, AbstractMatrix<T> sourceB,
+			AbstractMatrix<T> dest, MathOper<T> oper) {
+		assert sourceB.xSize() == sourceA.xSize();
+		assert sourceB.ySize() == sourceA.ySize();
+		assert dest.xSize() == sourceA.xSize();
+		assert dest.ySize() == sourceA.ySize();
+
+		for (int y = 0; y < sourceA.ySize(); ++y) {
+			for (int x = 0; x < sourceA.xSize(); ++x) {
+				dest.set(x, y, oper.f(sourceA.get(x, y), sourceB.get(x, y)));
+			}
+		}
+	}
 }
