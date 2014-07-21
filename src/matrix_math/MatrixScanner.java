@@ -1,7 +1,7 @@
 package matrix_math;
 
 public class MatrixScanner<T extends Number> {
-	public void reduceX2Y(AbstractMatrix<T> source, AbstractMatrix<T> dest,
+	protected void reduceX2Y(AbstractMatrix<T> source, AbstractMatrix<T> dest,
 			MathOper<T> oper) {
 		assert dest.xSize() == 1;
 		assert dest.ySize() == source.ySize();
@@ -13,7 +13,7 @@ public class MatrixScanner<T extends Number> {
 		}
 	}
 
-	public void reduceY2X(AbstractMatrix<T> source, AbstractMatrix<T> dest,
+	protected void reduceY2X(AbstractMatrix<T> source, AbstractMatrix<T> dest,
 			MathOper<T> oper) {
 		assert dest.xSize() == source.xSize();
 		assert dest.ySize() == 1;
@@ -25,7 +25,7 @@ public class MatrixScanner<T extends Number> {
 		}
 	}
 
-	public void mapX2Y(AbstractMatrix<T> source, AbstractMatrix<T> line,
+	protected void mapX2Y(AbstractMatrix<T> source, AbstractMatrix<T> line,
 			AbstractMatrix<T> dest, MathOper<T> oper) {
 		assert line.xSize() == 1;
 		assert line.ySize() == source.ySize();
@@ -39,7 +39,7 @@ public class MatrixScanner<T extends Number> {
 		}
 	}
 
-	public void mapY2X(AbstractMatrix<T> source, AbstractMatrix<T> line,
+	protected void mapY2X(AbstractMatrix<T> source, AbstractMatrix<T> line,
 			AbstractMatrix<T> dest, MathOper<T> oper) {
 		assert line.xSize() == source.xSize();
 		assert line.ySize() == 1;
@@ -53,7 +53,7 @@ public class MatrixScanner<T extends Number> {
 		}
 	}
 
-	public void map(AbstractMatrix<T> source, AbstractMatrix<T> dest,
+	protected void map(AbstractMatrix<T> source, AbstractMatrix<T> dest,
 			MathFunc<T> func) {
 		assert dest.xSize() == source.xSize();
 		assert dest.ySize() == source.ySize();
