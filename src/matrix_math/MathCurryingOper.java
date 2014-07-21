@@ -1,6 +1,6 @@
 package matrix_math;
 
-public class MathCurryingOper<T extends Number> implements MathFunc<T> {
+public final class MathCurryingOper<T extends Number> implements MathFunc<T> {
 	private final MathOper<T> _oper;
 	private final T _value;
 
@@ -10,7 +10,7 @@ public class MathCurryingOper<T extends Number> implements MathFunc<T> {
 	}
 
 	@Override
-	public T f(T a) {
+	public final T f(T a) {
 		return _oper.f(a, _value);
 	}
 }

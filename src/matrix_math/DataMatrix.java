@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class DataMatrix<T extends Number> implements AbstractMatrix<T> {
 	private final int _xSize;
 	private final int _ySize;
-	protected ArrayList<ArrayList<T>> data;
+	private final ArrayList<ArrayList<T>> data;
 
 	public DataMatrix(int x, int y) {
 		_xSize = x;

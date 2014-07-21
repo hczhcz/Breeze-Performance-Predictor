@@ -41,6 +41,8 @@ public abstract class FileMatrix<T extends Number> implements AbstractMatrix<T> 
 		final int x = reader.nextInt();
 		final int y = reader.nextInt();
 
+		_data = new DataMatrix<T>(x, y);
+
 		for (int y1 = 0; y1 < y; ++y1) {
 			for (int x1 = 0; x1 < x; ++x1) {
 				set(x, y, readData(reader));
