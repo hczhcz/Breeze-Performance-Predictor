@@ -3,7 +3,7 @@ package matrix_math;
 import java.util.Scanner;
 
 public abstract class FileMatrix<T extends Number> implements AbstractMatrix<T> {
-	private DataMatrix<T> _data;
+	private AbstractMatrix<T> _data;
 
 	protected abstract T readData(Scanner reader);
 

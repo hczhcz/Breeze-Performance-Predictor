@@ -3,39 +3,49 @@ package performance_calc;
 import matrix_math.AbstractMatrix;
 import matrix_math.DataMatrix;
 import matrix_math.MatrixScanner;
+import matrix_math.X2YMatrix;
+import matrix_math.Y2XMatrix;
 
 public class PerformanceCalcContainer extends MatrixScanner<Float> {
-	protected class BaseCalc {
-		final protected DataMatrix<Float> input;
-		final int x;
-		final int y;
+	protected class DataBlock {
+		final protected AbstractMatrix<Float> input;
+		final protected int x;
+		final protected int y;
 
-		protected DataMatrix<Float> exist;
+		protected AbstractMatrix<Float> exist;
 
-		protected DataMatrix<Float> xSum;
-		protected DataMatrix<Float> ySum;
-		protected DataMatrix<Float> xCount;
-		protected DataMatrix<Float> yCount;
-		protected DataMatrix<Float> xAve;
-		protected DataMatrix<Float> yAve;
-		protected DataMatrix<Float> xAbove;
-		protected DataMatrix<Float> yAbove;
-		protected DataMatrix<Float> xSqrSum;
-		protected DataMatrix<Float> ySqrSum;
-		protected DataMatrix<Float> xSimBase;
-		protected DataMatrix<Float> ySimBase;
-		protected DataMatrix<Float> xSimSum;
-		protected DataMatrix<Float> ySimSum;
-		protected DataMatrix<Float> xSim;
-		protected DataMatrix<Float> ySim;
+		protected AbstractMatrix<Float> xSum;
+		protected AbstractMatrix<Float> ySum;
+		protected AbstractMatrix<Float> xCount;
+		protected AbstractMatrix<Float> yCount;
+		protected AbstractMatrix<Float> xAve;
+		protected AbstractMatrix<Float> yAve;
+		protected AbstractMatrix<Float> xAbove;
+		protected AbstractMatrix<Float> yAbove;
+		protected AbstractMatrix<Float> xSqrSum;
+		protected AbstractMatrix<Float> ySqrSum;
+		protected AbstractMatrix<Float> xSimBase;
+		protected AbstractMatrix<Float> ySimBase;
+		protected AbstractMatrix<Float> xSimWeight;
+		protected AbstractMatrix<Float> ySimWeight;
+		protected AbstractMatrix<Float> xSim;
+		protected AbstractMatrix<Float> ySim;
+		protected AbstractMatrix<Float> xMixedSim;
+		protected AbstractMatrix<Float> yMixedSim;
+		protected AbstractMatrix<Float> xTotalSim;
+		protected AbstractMatrix<Float> yTotalSim;
+		protected AbstractMatrix<Float> xPSum;
+		protected AbstractMatrix<Float> yPSum;
+		protected AbstractMatrix<Float> xPValue;
+		protected AbstractMatrix<Float> yPValue;
 
-		protected BaseCalc(DataMatrix<Float> source) {
+		protected DataBlock(AbstractMatrix<Float> source) {
 			input = source;
 			x = source.xSize();
 			y = source.ySize();
 		}
 
-		protected void DoCalc() {
+		protected void PhraseAverage() {
 			xSum = new DataMatrix<Float>(x, 1);
 			ySum = new DataMatrix<Float>(1, y);
 			reduceY2X(input, xSum, MathToolSet.add);
@@ -55,7 +65,9 @@ public class PerformanceCalcContainer extends MatrixScanner<Float> {
 			yAbove = new DataMatrix<Float>(x, y);
 			mapY2X(input, xAve, xAbove, MathToolSet.sub.boolCond());
 			mapX2Y(input, yAve, yAbove, MathToolSet.sub.boolCond());
+		}
 
+		protected void PhraseSimilarity() {
 			xSqrSum = new DataMatrix<Float>(x, 1);
 			ySqrSum = new DataMatrix<Float>(1, y);
 			// notice: swap xAbove and yAbove
@@ -68,43 +80,67 @@ public class PerformanceCalcContainer extends MatrixScanner<Float> {
 			map(ySqrSum, ySimBase, MathToolSet.rSqrt);
 
 			// size x * x
-			xSimSum = new DataMatrix<Float>(x, x);
+			xSimWeight = new DataMatrix<Float>(x, x);
 			for (int i = 0; i < x; ++i) {
-				final DataMatrix<Float> mulMapX = new DataMatrix<Float>(x, y);
+				final AbstractMatrix<Float> mulMapX = new DataMatrix<Float>(x,
+						y);
 				// notice: swap xAbove and yAbove
-				mapX2Y(yAbove, yAbove.getLineX2Y(x), mulMapX, MathToolSet.mul);
+				mapX2Y(yAbove, new X2YMatrix<Float>(yAbove, i), mulMapX,
+						MathToolSet.mul);
 
-				final DataMatrix<Float> mulSumX = new DataMatrix<Float>(x, 1);
-				reduceY2X(mulMapX, mulSumX, MathToolSet.add);
+				reduceY2X(mulMapX, new Y2XMatrix<Float>(xSimWeight, i),
+						MathToolSet.add);
 			}
 
 			// size y * y
-			ySimSum = new DataMatrix<Float>(y, y);
+			ySimWeight = new DataMatrix<Float>(y, y);
 			for (int i = 0; i < y; ++i) {
-				final DataMatrix<Float> mulMapY = new DataMatrix<Float>(x, y);
+				final AbstractMatrix<Float> mulMapY = new DataMatrix<Float>(x,
+						y);
 				// notice: swap xAbove and yAbove
-				mapY2X(xAbove, xAbove.getLineY2X(y), mulMapY, MathToolSet.mul);
+				mapY2X(xAbove, new Y2XMatrix<Float>(xAbove, i), mulMapY,
+						MathToolSet.mul);
 
-				final DataMatrix<Float> mulSumY = new DataMatrix<Float>(1, y);
-				reduceX2Y(mulMapY, mulSumY, MathToolSet.add);
+				reduceX2Y(mulMapY, new X2YMatrix<Float>(ySimWeight, i),
+						MathToolSet.add);
 			}
 
-			for (int i = 0; i < x; ++i) {
+			xSim = new DataMatrix<Float>(x, y);
+			ySim = new DataMatrix<Float>(x, y);
+			mapY2X(xSimWeight, xSimBase, xSim, MathToolSet.div.boolCond());
+			mapX2Y(ySimWeight, ySimBase, ySim, MathToolSet.div.boolCond());
+		}
 
-			}
+		protected void PhraseRemixing(DataBlock another, Float lambdaValue) {
+			each(xSim, another.xSim, xMixedSim, MathToolSet.mix(lambdaValue));
+			each(ySim, another.ySim, yMixedSim, MathToolSet.mix(lambdaValue));
+		}
 
-			for (int i = 0; i < y; ++i) {
-
-			}
+		protected void PhrasePredictedValue(AbstractMatrix<Float> dest) {
+			// TODO: TotalSim PSum PValue
 		}
 	}
 
-	protected void calc(AbstractMatrix<Float> source, AbstractMatrix<Float> dest) {
-		assert dest.xSize() == source.xSize();
-		assert dest.ySize() == source.ySize();
+	protected void calc(Float lambda1, Float lambda2,
+			AbstractMatrix<Float> source1, AbstractMatrix<Float> source2,
+			AbstractMatrix<Float> dest1, AbstractMatrix<Float> dest2) {
+		assert source2.xSize() == source1.xSize();
+		assert source2.ySize() == source1.ySize();
+		assert dest1.xSize() == source1.xSize();
+		assert dest1.ySize() == source1.ySize();
+		assert dest2.xSize() == source1.xSize();
+		assert dest2.ySize() == source1.ySize();
 
-		final int x = source.xSize();
-		final int y = source.ySize();
+		final DataBlock data1 = new DataBlock(source1);
+		final DataBlock data2 = new DataBlock(source2);
 
+		data1.PhraseAverage();
+		data2.PhraseAverage();
+		data1.PhraseSimilarity();
+		data2.PhraseSimilarity();
+		data1.PhraseRemixing(data2, lambda1);
+		data2.PhraseRemixing(data1, lambda2);
+		data1.PhrasePredictedValue(dest1);
+		data2.PhrasePredictedValue(dest2);
 	}
 }

@@ -64,6 +64,35 @@ public class MathToolSet {
 		}
 	};
 
+	private static class mixClass extends OperBase {
+		private final Float _lambda;
+
+		public mixClass(Float lambdaValue) {
+			_lambda = lambdaValue;
+		}
+
+		@Override
+		public Float f(Float a, Float b) {
+			assert a >= 0;
+			assert b >= 0;
+
+			if (a == 0) {
+				return b;
+			}
+			if (b == 0) {
+				return a;
+			}
+			return a * (_lambda) + b * (1 - _lambda);
+		}
+	}
+
+	public final static OperBase mix(Float lambdaValue) {
+		assert lambdaValue >= 0;
+		assert lambdaValue <= 1;
+
+		return new mixClass(lambdaValue);
+	}
+
 	public final static FuncBase bool = new FuncBase() {
 		@Override
 		public Float f(Float a) {
