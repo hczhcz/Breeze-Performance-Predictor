@@ -35,16 +35,6 @@ public abstract class FileMatrix<T extends Number> implements AbstractMatrix<T> 
 		return _data.ySize();
 	}
 
-	@Override
-	public AbstractMatrix<T> lineX2Y(int x) {
-		return _data.lineX2Y(x);
-	}
-
-	@Override
-	public AbstractMatrix<T> lineY2X(int y) {
-		return _data.lineY2X(y);
-	}
-
 	public void loadFromFile(String fileName) {
 		final Scanner reader = new Scanner(System.in);
 
