@@ -2,6 +2,7 @@ package performance_calc;
 
 import matrix_math.AbstractMatrix;
 import matrix_math.DataMatrix;
+import matrix_math.FileMatrix;
 import matrix_math.MatrixScanner;
 import matrix_math.X2YMatrix;
 import matrix_math.Y2XMatrix;
@@ -162,7 +163,7 @@ public class PerformanceCalcContainer extends MatrixScanner<Float> {
 		}
 	}
 
-	protected void calc(Float lambda1, Float lambda2,
+	public void calc(Float lambda1, Float lambda2, Float lambdaXY,
 			AbstractMatrix<Float> source1, AbstractMatrix<Float> source2,
 			AbstractMatrix<Float> dest1, AbstractMatrix<Float> dest2) {
 		assert source2.xSize() == source1.xSize();
@@ -181,7 +182,23 @@ public class PerformanceCalcContainer extends MatrixScanner<Float> {
 		data2.PhraseSimilarity();
 		data1.PhraseRemixing(data2, lambda1);
 		data2.PhraseRemixing(data1, lambda2);
-		data1.PhrasePredictedValue(dest1, 0.5f);
-		data2.PhrasePredictedValue(dest2, 0.5f);
+		data1.PhrasePredictedValue(dest1, lambdaXY);
+		data2.PhrasePredictedValue(dest2, lambdaXY);
+	}
+
+	public void calcFile(Float lambda1, Float lambda2, Float lambdaXY,
+			String sourceFile1, String sourceFile2, String destFile1,
+			String destFile2) {
+		final FileMatrix<Float> source1 = new FloatFileMatrix(sourceFile1);
+		final FileMatrix<Float> source2 = new FloatFileMatrix(sourceFile2);
+		final FileMatrix<Float> dest1 = new FloatFileMatrix(source1.xSize(),
+				source1.ySize());
+		final FileMatrix<Float> dest2 = new FloatFileMatrix(source2.xSize(),
+				source2.ySize());
+
+		calc(lambda1, lambda2, lambdaXY, source1, source2, dest1, dest2);
+
+		dest1.saveToFile(destFile1);
+		dest2.saveToFile(destFile2);
 	}
 }
