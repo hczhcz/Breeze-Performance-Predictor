@@ -64,11 +64,13 @@ public class MathToolSet {
 		}
 	};
 
-	private static class mixClass extends OperBase {
+	private static class _MixClass extends OperBase {
 		private final Float _lambda;
+		private final boolean _force;
 
-		public mixClass(Float lambdaValue) {
-			_lambda = lambdaValue;
+		public _MixClass(Float lambda, boolean force) {
+			_lambda = lambda;
+			_force = force;
 		}
 
 		@Override
@@ -76,21 +78,24 @@ public class MathToolSet {
 			assert a >= 0;
 			assert b >= 0;
 
-			if (a == 0) {
-				return b;
+			if (!_force) {
+				if (a == 0) {
+					return b;
+				}
+				if (b == 0) {
+					return a;
+				}
 			}
-			if (b == 0) {
-				return a;
-			}
+
 			return a * (_lambda) + b * (1 - _lambda);
 		}
 	}
 
-	public final static OperBase mix(Float lambdaValue) {
-		assert lambdaValue >= 0;
-		assert lambdaValue <= 1;
+	public final static OperBase mix(Float lambda, boolean force) {
+		assert lambda >= 0;
+		assert lambda <= 1;
 
-		return new mixClass(lambdaValue);
+		return new _MixClass(lambda, force);
 	}
 
 	public final static FuncBase bool = new FuncBase() {

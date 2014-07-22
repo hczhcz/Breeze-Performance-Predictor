@@ -111,9 +111,9 @@ public class PerformanceCalcContainer extends MatrixScanner<Float> {
 			mapX2Y(ySimWeight, ySimBase, ySim, MathToolSet.div.boolCond());
 		}
 
-		protected void PhraseRemixing(DataBlock another, Float lambdaValue) {
-			each(xSim, another.xSim, xMixedSim, MathToolSet.mix(lambdaValue));
-			each(ySim, another.ySim, yMixedSim, MathToolSet.mix(lambdaValue));
+		protected void PhraseRemixing(DataBlock another, Float lambda) {
+			each(xSim, another.xSim, xMixedSim, MathToolSet.mix(lambda, true));
+			each(ySim, another.ySim, yMixedSim, MathToolSet.mix(lambda, true));
 		}
 
 		protected void PhrasePredictedValue(AbstractMatrix<Float> dest) {
