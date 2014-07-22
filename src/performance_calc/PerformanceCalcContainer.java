@@ -36,6 +36,8 @@ public class PerformanceCalcContainer extends MatrixScanner<Float> {
 		protected AbstractMatrix<Float> yTotalSim;
 		protected AbstractMatrix<Float> xPSum;
 		protected AbstractMatrix<Float> yPSum;
+		protected AbstractMatrix<Float> xPAbove;
+		protected AbstractMatrix<Float> yPAbove;
 		protected AbstractMatrix<Float> xPValue;
 		protected AbstractMatrix<Float> yPValue;
 
@@ -105,8 +107,8 @@ public class PerformanceCalcContainer extends MatrixScanner<Float> {
 						MathToolSet.add);
 			}
 
-			xSim = new DataMatrix<Float>(x, y);
-			ySim = new DataMatrix<Float>(x, y);
+			xSim = new DataMatrix<Float>(x, x);
+			ySim = new DataMatrix<Float>(y, y);
 			mapY2X(xSimWeight, xSimBase, xSim, MathToolSet.div.boolCond());
 			mapX2Y(ySimWeight, ySimBase, ySim, MathToolSet.div.boolCond());
 		}
@@ -116,8 +118,47 @@ public class PerformanceCalcContainer extends MatrixScanner<Float> {
 			each(ySim, another.ySim, yMixedSim, MathToolSet.mix(lambda, true));
 		}
 
-		protected void PhrasePredictedValue(AbstractMatrix<Float> dest) {
+		protected void PhrasePredictedValue(AbstractMatrix<Float> dest,
+				Float lambda) {
 			// TODO: TotalSim PSum PValue
+			xTotalSim = new DataMatrix<Float>(x, 1);
+			yTotalSim = new DataMatrix<Float>(1, y);
+			reduceY2X(xMixedSim, xTotalSim, MathToolSet.add);
+			reduceX2Y(yMixedSim, yTotalSim, MathToolSet.add);
+
+			xPSum = new DataMatrix<Float>(x, y);
+			for (int i = 0; i < x; ++i) {
+				final AbstractMatrix<Float> mulMapX = new DataMatrix<Float>(x,
+						y);
+				mapY2X(xAbove, new Y2XMatrix<Float>(xSim, i), mulMapX,
+						MathToolSet.mul);
+
+				reduceX2Y(mulMapX, new X2YMatrix<Float>(xPSum, i),
+						MathToolSet.add);
+			}
+
+			yPSum = new DataMatrix<Float>(x, y);
+			for (int i = 0; i < y; ++i) {
+				final AbstractMatrix<Float> mulMapY = new DataMatrix<Float>(x,
+						y);
+				mapX2Y(yAbove, new X2YMatrix<Float>(ySim, i), mulMapY,
+						MathToolSet.mul);
+
+				reduceY2X(mulMapY, new Y2XMatrix<Float>(yPSum, i),
+						MathToolSet.add);
+			}
+
+			xPAbove = new DataMatrix<Float>(x, y);
+			yPAbove = new DataMatrix<Float>(x, y);
+			mapY2X(xPSum, xTotalSim, xPAbove, MathToolSet.div.boolCond());
+			mapX2Y(yPSum, yTotalSim, yPAbove, MathToolSet.div.boolCond());
+
+			xPValue = new DataMatrix<Float>(x, y);
+			yPValue = new DataMatrix<Float>(x, y);
+			mapY2X(xPAbove, xAve, xPValue, MathToolSet.add.boolCond());
+			mapX2Y(yPAbove, yAve, yPValue, MathToolSet.add.boolCond());
+
+			each(xPValue, yPValue, dest, MathToolSet.mix(lambda, false));
 		}
 	}
 
@@ -140,7 +181,7 @@ public class PerformanceCalcContainer extends MatrixScanner<Float> {
 		data2.PhraseSimilarity();
 		data1.PhraseRemixing(data2, lambda1);
 		data2.PhraseRemixing(data1, lambda2);
-		data1.PhrasePredictedValue(dest1);
-		data2.PhrasePredictedValue(dest2);
+		data1.PhrasePredictedValue(dest1, 0.5f);
+		data2.PhrasePredictedValue(dest2, 0.5f);
 	}
 }
