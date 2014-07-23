@@ -14,8 +14,10 @@ public abstract class FileMatrix<T extends Number> implements AbstractMatrix<T> 
 
 	protected abstract void writeData(Formatter writer, T value);
 
+	protected abstract T fillData();
+
 	public FileMatrix(int x, int y) {
-		_data = new DataMatrix<T>(x, y);
+		_data = new DataMatrix<T>(x, y, fillData());
 	}
 
 	public FileMatrix(String fileName) throws FileNotFoundException {
@@ -48,11 +50,11 @@ public abstract class FileMatrix<T extends Number> implements AbstractMatrix<T> 
 		final int x = reader.nextInt();
 		final int y = reader.nextInt();
 
-		_data = new DataMatrix<T>(x, y);
+		_data = new DataMatrix<T>(x, y, fillData());
 
 		for (int y1 = 0; y1 < y; ++y1) {
 			for (int x1 = 0; x1 < x; ++x1) {
-				_data.set(x, y, readData(reader));
+				_data.set(x1, y1, readData(reader));
 			}
 		}
 	}
@@ -67,7 +69,7 @@ public abstract class FileMatrix<T extends Number> implements AbstractMatrix<T> 
 
 		for (int y1 = 0; y1 < y; ++y1) {
 			for (int x1 = 0; x1 < x; ++x1) {
-				writeData(writer, _data.get(x, y));
+				writeData(writer, _data.get(x1, y1));
 			}
 			writer.format("\n");
 		}

@@ -24,4 +24,9 @@ public class FloatFileMatrix extends FileMatrix<Float> {
 	protected void writeData(Formatter writer, Float value) {
 		writer.format("%f ", value);
 	}
+
+	@Override
+	protected Float fillData() {
+		return 0.0f;
+	}
 }
