@@ -9,7 +9,7 @@ import matrix_math.MatrixScanner;
 import matrix_math.X2YMatrix;
 import matrix_math.Y2XMatrix;
 
-public class PerformanceCalcContainer extends MatrixScanner<Float> {
+public class CalcContainer extends MatrixScanner<Float> {
 	protected Progress pr;
 
 	protected class Data extends DataMatrix<Float> {

@@ -2,7 +2,7 @@ package non_gui;
 
 import java.io.IOException;
 
-import performance_calc.PerformanceCalcContainer;
+import performance_calc.CalcContainer;
 
 public class NonGUIMain {
 
@@ -10,7 +10,7 @@ public class NonGUIMain {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		final PerformanceCalcContainer calc = new PerformanceCalcContainer();
+		final CalcContainer calc = new CalcContainer();
 
 		try {
 			calc.calcFile(0.5f, 0.5f, 0.5f, "in1.txt", "in2.txt", "out1.txt",
