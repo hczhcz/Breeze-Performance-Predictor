@@ -14,7 +14,7 @@ public class NonGUIMain {
 
 		try {
 			calc.calcFile(0.5f, 0.5f, 0.5f, "in1.txt", "in2.txt", "out1.txt",
-					"out2.txt");
+					"out2.txt", new PrintProgress());
 		} catch (final IOException e) {
 			e.printStackTrace();
 		}

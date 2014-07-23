@@ -10,9 +10,12 @@ import matrix_math.X2YMatrix;
 import matrix_math.Y2XMatrix;
 
 public class PerformanceCalcContainer extends MatrixScanner<Float> {
+	protected Progress pr;
+
 	protected class Data extends DataMatrix<Float> {
 		protected Data(int x, int y) {
 			super(x, y, 0.0f);
+			pr.did(x * y);
 		}
 	}
 
@@ -54,6 +57,46 @@ public class PerformanceCalcContainer extends MatrixScanner<Float> {
 			input = source;
 			x = source.xSize();
 			y = source.ySize();
+		}
+
+		protected void AddProgress() {
+			// Average
+			pr.put(x * 1);
+			pr.put(1 * y);
+			pr.put(x * 1);
+			pr.put(1 * y);
+			pr.put(x * 1);
+			pr.put(1 * y);
+			pr.put(x * y);
+			pr.put(x * y);
+
+			// Similarity
+			pr.put(x * 1);
+			pr.put(1 * y);
+			pr.put(x * 1);
+			pr.put(1 * y);
+			pr.put(x * x);
+			pr.put(x * y * x);
+			pr.put(y * y);
+			pr.put(x * y * y);
+			pr.put(x * x);
+			pr.put(y * y);
+
+			// Remixing
+			pr.put(x * x);
+			pr.put(y * y);
+
+			// PredictedValue
+			pr.put(x * 1);
+			pr.put(1 * y);
+			pr.put(x * y);
+			pr.put(x * y * x);
+			pr.put(x * y);
+			pr.put(x * y * y);
+			pr.put(x * y);
+			pr.put(x * y);
+			pr.put(x * y);
+			pr.put(x * y);
 		}
 
 		protected void PhraseAverage() {
@@ -170,7 +213,8 @@ public class PerformanceCalcContainer extends MatrixScanner<Float> {
 
 	public void calc(Float lambda1, Float lambda2, Float lambdaXY,
 			AbstractMatrix<Float> source1, AbstractMatrix<Float> source2,
-			AbstractMatrix<Float> dest1, AbstractMatrix<Float> dest2) {
+			AbstractMatrix<Float> dest1, AbstractMatrix<Float> dest2,
+			Progress progress) {
 		assert source2.xSize() == source1.xSize();
 		assert source2.ySize() == source1.ySize();
 		assert dest1.xSize() == source1.xSize();
@@ -178,8 +222,13 @@ public class PerformanceCalcContainer extends MatrixScanner<Float> {
 		assert dest2.xSize() == source1.xSize();
 		assert dest2.ySize() == source1.ySize();
 
+		pr = progress;
+
 		final DataBlock data1 = new DataBlock(source1);
 		final DataBlock data2 = new DataBlock(source2);
+
+		data1.AddProgress();
+		data2.AddProgress();
 
 		data1.PhraseAverage();
 		data2.PhraseAverage();
@@ -193,7 +242,7 @@ public class PerformanceCalcContainer extends MatrixScanner<Float> {
 
 	public void calcFile(Float lambda1, Float lambda2, Float lambdaXY,
 			String sourceFile1, String sourceFile2, String destFile1,
-			String destFile2) throws IOException {
+			String destFile2, Progress progress) throws IOException {
 		final FileMatrix<Float> source1 = new FloatFileMatrix(sourceFile1);
 		final FileMatrix<Float> source2 = new FloatFileMatrix(sourceFile2);
 		final FileMatrix<Float> dest1 = new FloatFileMatrix(source1.xSize(),
@@ -201,7 +250,8 @@ public class PerformanceCalcContainer extends MatrixScanner<Float> {
 		final FileMatrix<Float> dest2 = new FloatFileMatrix(source2.xSize(),
 				source2.ySize());
 
-		calc(lambda1, lambda2, lambdaXY, source1, source2, dest1, dest2);
+		calc(lambda1, lambda2, lambdaXY, source1, source2, dest1, dest2,
+				progress);
 
 		dest1.saveToFile(destFile1);
 		dest2.saveToFile(destFile2);
