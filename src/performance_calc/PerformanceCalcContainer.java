@@ -1,5 +1,7 @@
 package performance_calc;
 
+import java.io.IOException;
+
 import matrix_math.AbstractMatrix;
 import matrix_math.DataMatrix;
 import matrix_math.FileMatrix;
@@ -188,7 +190,7 @@ public class PerformanceCalcContainer extends MatrixScanner<Float> {
 
 	public void calcFile(Float lambda1, Float lambda2, Float lambdaXY,
 			String sourceFile1, String sourceFile2, String destFile1,
-			String destFile2) {
+			String destFile2) throws IOException {
 		final FileMatrix<Float> source1 = new FloatFileMatrix(sourceFile1);
 		final FileMatrix<Float> source2 = new FloatFileMatrix(sourceFile2);
 		final FileMatrix<Float> dest1 = new FloatFileMatrix(source1.xSize(),
