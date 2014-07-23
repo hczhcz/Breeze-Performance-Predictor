@@ -1,5 +1,10 @@
 package matrix_math;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Formatter;
 import java.util.Scanner;
 
 public abstract class FileMatrix<T extends Number> implements AbstractMatrix<T> {
@@ -7,11 +12,13 @@ public abstract class FileMatrix<T extends Number> implements AbstractMatrix<T> 
 
 	protected abstract T readData(Scanner reader);
 
+	protected abstract void writeData(Formatter writer, T value);
+
 	public FileMatrix(int x, int y) {
 		_data = new DataMatrix<T>(x, y);
 	}
 
-	public FileMatrix(String fileName) {
+	public FileMatrix(String fileName) throws FileNotFoundException {
 		loadFromFile(fileName);
 	}
 
@@ -35,8 +42,8 @@ public abstract class FileMatrix<T extends Number> implements AbstractMatrix<T> 
 		return _data.ySize();
 	}
 
-	public void loadFromFile(String fileName) {
-		final Scanner reader = new Scanner(System.in);
+	public void loadFromFile(String fileName) throws FileNotFoundException {
+		final Scanner reader = new Scanner(new FileReader(fileName));
 
 		final int x = reader.nextInt();
 		final int y = reader.nextInt();
@@ -45,12 +52,24 @@ public abstract class FileMatrix<T extends Number> implements AbstractMatrix<T> 
 
 		for (int y1 = 0; y1 < y; ++y1) {
 			for (int x1 = 0; x1 < x; ++x1) {
-				set(x, y, readData(reader));
+				_data.set(x, y, readData(reader));
 			}
 		}
 	}
 
-	public void saveToFile(String fileName) {
-		//
+	public void saveToFile(String fileName) throws IOException {
+		final Formatter writer = new Formatter(new FileWriter(fileName));
+
+		final int x = _data.xSize();
+		final int y = _data.ySize();
+
+		writer.format("%d %d\n", x, y);
+
+		for (int y1 = 0; y1 < y; ++y1) {
+			for (int x1 = 0; x1 < x; ++x1) {
+				writeData(writer, _data.get(x, y));
+			}
+			writer.format("\n");
+		}
 	}
 }
