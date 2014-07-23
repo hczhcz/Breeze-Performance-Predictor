@@ -69,8 +69,8 @@ public class PerformanceCalcContainer extends MatrixScanner<Float> {
 
 			xAve = new Data(x, 1);
 			yAve = new Data(1, y);
-			each(xSum, xCount, xAve, MathToolSet.div.boolCond());
-			each(ySum, yCount, yAve, MathToolSet.div.boolCond());
+			each(xSum, xCount, xAve, MathToolSet.div);
+			each(ySum, yCount, yAve, MathToolSet.div);
 
 			xAbove = new Data(x, y);
 			yAbove = new Data(x, y);
@@ -116,8 +116,8 @@ public class PerformanceCalcContainer extends MatrixScanner<Float> {
 
 			xSim = new Data(x, x);
 			ySim = new Data(y, y);
-			mapY2X(xSimWeight, xSimBase, xSim, MathToolSet.div.boolCond());
-			mapX2Y(ySimWeight, ySimBase, ySim, MathToolSet.div.boolCond());
+			mapY2X(xSimWeight, xSimBase, xSim, MathToolSet.div);
+			mapX2Y(ySimWeight, ySimBase, ySim, MathToolSet.div);
 		}
 
 		protected void PhraseRemixing(DataBlock another, Float lambda) {
@@ -129,7 +129,6 @@ public class PerformanceCalcContainer extends MatrixScanner<Float> {
 
 		protected void PhrasePredictedValue(AbstractMatrix<Float> dest,
 				Float lambda) {
-			// TODO: TotalSim PSum PValue
 			xTotalSim = new Data(x, 1);
 			yTotalSim = new Data(1, y);
 			reduceY2X(xMixedSim, xTotalSim, MathToolSet.add);
@@ -157,8 +156,8 @@ public class PerformanceCalcContainer extends MatrixScanner<Float> {
 
 			xPAbove = new Data(x, y);
 			yPAbove = new Data(x, y);
-			mapY2X(xPSum, xTotalSim, xPAbove, MathToolSet.div.boolCond());
-			mapX2Y(yPSum, yTotalSim, yPAbove, MathToolSet.div.boolCond());
+			mapY2X(xPSum, xTotalSim, xPAbove, MathToolSet.div);
+			mapX2Y(yPSum, yTotalSim, yPAbove, MathToolSet.div);
 
 			xPValue = new Data(x, y);
 			yPValue = new Data(x, y);

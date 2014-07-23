@@ -65,7 +65,7 @@ public abstract class FileMatrix<T extends Number> implements AbstractMatrix<T> 
 		final int x = _data.xSize();
 		final int y = _data.ySize();
 
-		writer.format("%d %d\n", x, y);
+		writer.format("%d\t%d\n", x, y);
 
 		for (int y1 = 0; y1 < y; ++y1) {
 			for (int x1 = 0; x1 < x; ++x1) {

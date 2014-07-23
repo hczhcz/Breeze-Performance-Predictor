@@ -29,7 +29,7 @@ public class MathToolSet {
 		}
 	};
 
-	protected static abstract class FuncBase implements MathFunc<Float> {
+	private static abstract class FuncBase implements MathFunc<Float> {
 		@Override
 		public abstract Float f(Float a);
 	}
@@ -58,9 +58,9 @@ public class MathToolSet {
 	public final static OperBase div = new OperBase() {
 		@Override
 		public Float f(Float a, Float b) {
-			assert b != 0; // if x/0, error
+			assert a == 0 || b != 0; // if x/0, error
 
-			return a / b;
+			return (b != 0) ? (a / b) : 0;
 		}
 	};
 
