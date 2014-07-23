@@ -3,7 +3,6 @@ package performance_calc;
 import java.io.IOException;
 
 import matrix_math.AbstractMatrix;
-import matrix_math.DataMatrix;
 import matrix_math.FileMatrix;
 import matrix_math.MatrixScanner;
 import matrix_math.X2YMatrix;
@@ -12,7 +11,7 @@ import matrix_math.Y2XMatrix;
 public class CalcContainer extends MatrixScanner<Float> {
 	protected Progress pr;
 
-	protected class Data extends DataMatrix<Float> {
+	protected class Data extends FloatDataMatrix {
 		protected Data(int x, int y) {
 			super(x, y, 0.0f);
 			pr.did(x * y);
