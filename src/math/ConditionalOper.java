@@ -1,12 +1,11 @@
-package matrix_math;
+package math;
 
-public abstract class MathConditionalOper<T extends Number> implements
-		MathOper<T> {
+public abstract class ConditionalOper<T extends Number> extends MathOperImpl<T> {
 	private final MathOper<T> _oper;
 
 	protected abstract boolean Cond(T a);
 
-	public MathConditionalOper(MathOper<T> oper) {
+	public ConditionalOper(MathOper<T> oper) {
 		_oper = oper;
 	}
 

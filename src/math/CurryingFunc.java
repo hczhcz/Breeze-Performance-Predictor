@@ -1,10 +1,10 @@
-package matrix_math;
+package math;
 
-public final class MathCurryingFunc<T extends Number> implements MathFunc<T> {
+public final class CurryingFunc<T extends Number> extends MathFuncImpl<T> {
 	private final MathOper<T> _oper;
 	private final T _value;
 
-	public MathCurryingFunc(MathOper<T> oper, T value) {
+	public CurryingFunc(MathOper<T> oper, T value) {
 		_oper = oper;
 		_value = value;
 	}

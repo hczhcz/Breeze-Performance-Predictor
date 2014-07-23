@@ -1,26 +1,17 @@
 package performance_calc;
 
-import matrix_math.MathAppliedOper;
-import matrix_math.MathConditionalOper;
-import matrix_math.MathCurryingFunc;
-import matrix_math.MathFunc;
-import matrix_math.MathOper;
+import math.ConditionalOper;
+import math.MathFuncImpl;
+import math.MathOper;
+import math.MathOperImpl;
 
 public class MathToolSet {
-	protected static abstract class OperBase implements MathOper<Float> {
+	protected static abstract class OperBase extends MathOperImpl<Float> {
 		@Override
 		public abstract Float f(Float a, Float b);
 
-		public MathFunc<Float> curry(Float value) {
-			return new MathCurryingFunc<Float>(this, value);
-		}
-
-		public MathOper<Float> apply(MathFunc<Float> func) {
-			return new MathAppliedOper<Float>(this, func);
-		}
-
 		public MathOper<Float> boolCond() {
-			return new MathConditionalOper<Float>(this) {
+			return new ConditionalOper<Float>(this) {
 				@Override
 				protected final boolean Cond(Float a) {
 					return a > 0;
@@ -29,7 +20,7 @@ public class MathToolSet {
 		}
 	};
 
-	private static abstract class FuncBase implements MathFunc<Float> {
+	private static abstract class FuncBase extends MathFuncImpl<Float> {
 		@Override
 		public abstract Float f(Float a);
 	}

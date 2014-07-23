@@ -1,10 +1,10 @@
-package matrix_math;
+package math;
 
-public class MathAppliedOper<T extends Number> implements MathOper<T> {
+public class AppliedOper<T extends Number> extends MathOperImpl<T> {
 	private final MathOper<T> _oper;
 	private final MathFunc<T> _func;
 
-	public MathAppliedOper(MathOper<T> oper, MathFunc<T> func) {
+	public AppliedOper(MathOper<T> oper, MathFunc<T> func) {
 		_oper = oper;
 		_func = func;
 	}

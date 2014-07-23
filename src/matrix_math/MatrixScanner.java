@@ -1,5 +1,8 @@
 package matrix_math;
 
+import math.MathFunc;
+import math.MathOper;
+
 public class MatrixScanner<T extends Number> {
 	protected void reduceX2Y(AbstractMatrix<T> source, AbstractMatrix<T> dest,
 			MathOper<T> oper) {
