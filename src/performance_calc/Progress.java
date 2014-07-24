@@ -6,14 +6,14 @@ public abstract class Progress {
 	private int _pNow;
 	private int _pTotal;
 
-	protected abstract void OnProgress(int value);
+	protected abstract void onProgress(int value);
 
 	public Progress(int step) {
 		_step = step;
 		_progress = 0;
 		_pNow = 0;
 		_pTotal = 0;
-		OnProgress(0);
+		onProgress(0);
 	}
 
 	public float getReal() {
@@ -34,7 +34,7 @@ public abstract class Progress {
 		final int now = getProgress();
 		if (now != _progress) {
 			_progress = now;
-			OnProgress(now);
+			onProgress(now);
 		}
 	}
 }

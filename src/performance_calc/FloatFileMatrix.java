@@ -22,7 +22,7 @@ public class FloatFileMatrix extends FileMatrix<Float> {
 
 	@Override
 	protected void writeData(Formatter writer, Float value) {
-		writer.format("%f ", value);
+		writer.format("%f\t", value); //$NON-NLS-1$
 	}
 
 	@Override

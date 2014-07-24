@@ -5,10 +5,16 @@ import math.MathFuncImpl;
 import math.MathOper;
 import math.MathOperImpl;
 
-public class MathToolSet {
+public final class MathToolSet {
+	private MathToolSet() {
+	}
+
 	protected static abstract class OperBase extends MathOperImpl<Float> {
 		@Override
 		public abstract Float f(Float a, Float b);
+
+		public OperBase() {
+		}
 
 		public MathOper<Float> boolCond() {
 			return new ConditionalOper<Float>(this) {
@@ -18,11 +24,14 @@ public class MathToolSet {
 				}
 			};
 		}
-	};
+	}
 
 	private static abstract class FuncBase extends MathFuncImpl<Float> {
 		@Override
 		public abstract Float f(Float a);
+
+		public FuncBase() {
+		}
 	}
 
 	public final static OperBase add = new OperBase() {
