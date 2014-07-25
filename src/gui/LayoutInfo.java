@@ -13,4 +13,8 @@ public final class LayoutInfo {
 	public static int border = 8;
 	public static int borderHalf = 4;
 	public static int borderLabel = 4;
+
+	public static int scaleStep = 100;
+	public static float scaleUnit = 1.0f / scaleStep;
+	public static int scaleStep2 = 200;
 }

@@ -1,6 +1,8 @@
 package gui;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
@@ -8,6 +10,7 @@ import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ProgressBar;
@@ -56,6 +59,7 @@ public class Window {
 		initLayouts();
 		initInnerLayouts();
 		initStyle();
+		initEvent();
 	}
 
 	protected void initWidgets() {
@@ -114,7 +118,7 @@ public class Window {
 		final FormData groupLambdaPos = new FormData();
 		groupLambdaPos.left = new FormAttachment(50, LayoutInfo.borderHalf);
 		groupLambdaPos.top = new FormAttachment(0, LayoutInfo.border);
-		groupLambdaPos.right = new FormAttachment(100, -LayoutInfo.borderHalf);
+		groupLambdaPos.right = new FormAttachment(100, -LayoutInfo.border);
 		groupLambdaPos.height = 4 * LayoutInfo.stdHeight + 5
 				* LayoutInfo.border;
 		groupLambda.setLayoutData(groupLambdaPos);
@@ -163,12 +167,24 @@ public class Window {
 		button2a.setText("Browse ...");
 		button2b.setText("Browse ...");
 		label3l.setText("Mix SIM-2");
-		label4l.setText("Keep SIM-1");
+		label4l.setText("Mix SIM-1");
 		label5l.setText("Y-based");
-		label3r.setText("Mix SIM-1");
+		scale3.setMinimum(0);
+		scale3.setMaximum(LayoutInfo.scaleStep);
+		scale3.setSelection(LayoutInfo.scaleStep * 3 / 4);
+		scale4.setMinimum(0);
+		scale4.setMaximum(LayoutInfo.scaleStep);
+		scale4.setSelection(LayoutInfo.scaleStep * 3 / 4);
+		scale5.setMinimum(0);
+		scale5.setMaximum(LayoutInfo.scaleStep);
+		scale5.setSelection(LayoutInfo.scaleStep / 2);
+		label3r.setText("Keep SIM-1");
 		label4r.setText("Keep SIM-2");
 		label5r.setText("X-based");
 		buttonExec.setText("Go");
+		progress.setMinimum(0);
+		progress.setMaximum(LayoutInfo.scaleStep2);
+		progress.setSelection(0);
 	}
 
 	protected void initOpenFile(Label label, Text text, Button button) {
@@ -196,6 +212,62 @@ public class Window {
 		button.setLayoutData(rPos);
 
 		label.setAlignment(SWT.RIGHT);
+	}
+
+	protected void initEvent() {
+		final SelectionAdapter browseEvent = new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				final Text widget;
+				final int mode;
+
+				if (e.widget == button1a) {
+					widget = text1a;
+					mode = SWT.OPEN;
+				} else if (e.widget == button1b) {
+					widget = text1b;
+					mode = SWT.SAVE;
+				} else if (e.widget == button2a) {
+					widget = text2a;
+					mode = SWT.OPEN;
+				} else if (e.widget == button2b) {
+					widget = text2b;
+					mode = SWT.SAVE;
+				} else {
+					// Never reach
+					widget = null;
+					mode = 0;
+
+					assert false;
+				}
+
+				final FileDialog dialog = new FileDialog(shell, mode);
+
+				final String fileName = dialog.open();
+				if (fileName != null && widget != null) {
+					widget.setText(fileName);
+					widget.setSelection(fileName.length());
+				}
+			}
+		};
+		button1a.addSelectionListener(browseEvent);
+		button1b.addSelectionListener(browseEvent);
+		button2a.addSelectionListener(browseEvent);
+		button2b.addSelectionListener(browseEvent);
+
+		final SelectionAdapter scaleEvent = new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				final Scale widget = (Scale) e.widget;
+
+				widget.setToolTipText(String.format("%.2f / 1.00", //$NON-NLS-1$
+						widget.getSelection() * LayoutInfo.scaleUnit));
+			}
+		};
+		scale3.addSelectionListener(scaleEvent);
+		scale4.addSelectionListener(scaleEvent);
+		scale5.addSelectionListener(scaleEvent);
+
 	}
 
 	protected void initSetLambda(Label label1, Scale scale, Label label2) {
