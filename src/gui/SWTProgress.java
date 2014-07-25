@@ -10,10 +10,13 @@ public class SWTProgress extends Progress {
 	public SWTProgress(ProgressBar progress) {
 		super(progress.getMaximum() - progress.getMinimum());
 		_progress = progress;
+		progress.setSelection(progress.getMinimum());
 	}
 
 	@Override
 	protected void onProgress(int value) {
-		_progress.setSelection(value);
+		if (_progress != null) {
+			_progress.setSelection(value + _progress.getMinimum());
+		}
 	}
 }
