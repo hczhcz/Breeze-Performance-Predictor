@@ -1,5 +1,7 @@
 package gui;
 
+import java.io.IOException;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -17,6 +19,8 @@ import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Scale;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+
+import performance_calc.CalcContainer;
 
 public class Window {
 	protected Display display;
@@ -247,6 +251,17 @@ public class Window {
 				if (fileName != null && widget != null) {
 					widget.setText(fileName);
 					widget.setSelection(fileName.length());
+
+					if (e.widget == button1a && text1b.getText().isEmpty()) {
+						text1b.setText(fileName + MiscInfo.outputExt);
+						text1b.setSelection(fileName.length()
+								+ MiscInfo.outputExt.length());
+					} else if (e.widget == button2a
+							&& text2b.getText().isEmpty()) {
+						text2b.setText(fileName + MiscInfo.outputExt);
+						text2b.setSelection(fileName.length()
+								+ MiscInfo.outputExt.length());
+					}
 				}
 			}
 		};
@@ -268,6 +283,30 @@ public class Window {
 		scale4.addSelectionListener(scaleEvent);
 		scale5.addSelectionListener(scaleEvent);
 
+		final SelectionAdapter execEvent = new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				final CalcContainer calc = new CalcContainer();
+
+				if (text1a.getText().isEmpty() || text1b.getText().isEmpty()
+						|| text2a.getText().isEmpty()
+						|| text2b.getText().isEmpty()) {
+					// TODO error msg
+				} else {
+					try {
+						calc.calcFile(scale3.getSelection()
+								* LayoutInfo.scaleUnit, scale4.getSelection()
+								* LayoutInfo.scaleUnit, scale5.getSelection()
+								* LayoutInfo.scaleUnit, text1a.getText(),
+								text2a.getText(), text1b.getText(),
+								text2b.getText(), new SWTProgress(progress));
+					} catch (final IOException e1) {
+						e1.printStackTrace();
+					}
+				}
+			}
+		};
+		buttonExec.addSelectionListener(execEvent);
 	}
 
 	protected void initSetLambda(Label label1, Scale scale, Label label2) {
