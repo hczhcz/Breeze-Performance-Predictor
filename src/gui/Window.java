@@ -6,6 +6,9 @@ import java.io.IOException;
 import matrix_math.AbstractMatrix;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseMoveListener;
+import org.eclipse.swt.events.MouseTrackListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -26,6 +29,7 @@ import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Scale;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.ToolTip;
 
 import performance_calc.FileCalcContainer;
 
@@ -71,6 +75,7 @@ public class Window {
 	protected Composite groupCanvas;
 	protected Canvas canvas1;
 	protected Canvas canvas2;
+	protected ToolTip tip;
 
 	protected FileCalcContainer calc;
 
@@ -94,10 +99,10 @@ public class Window {
 		groupFile1b = new Composite(groupFile, SWT.NONE);
 		groupFile2a = new Composite(groupFile, SWT.NONE);
 		groupFile2b = new Composite(groupFile, SWT.NONE);
-		label1a = new Label(groupFile1a, 0);
-		label1b = new Label(groupFile1b, 0);
-		label2a = new Label(groupFile2a, 0);
-		label2b = new Label(groupFile2b, 0);
+		label1a = new Label(groupFile1a, SWT.NONE);
+		label1b = new Label(groupFile1b, SWT.NONE);
+		label2a = new Label(groupFile2a, SWT.NONE);
+		label2b = new Label(groupFile2b, SWT.NONE);
 		text1a = new Text(groupFile1a, SWT.BORDER);
 		text1b = new Text(groupFile1b, SWT.BORDER);
 		text2a = new Text(groupFile2a, SWT.BORDER);
@@ -112,21 +117,22 @@ public class Window {
 		groupLambda4 = new Composite(groupLambda, SWT.NONE);
 		groupLambda5 = new Composite(groupLambda, SWT.NONE);
 		groupLambda6 = new Composite(groupLambda, SWT.NONE);
-		label3l = new Label(groupLambda3, 0);
-		label4l = new Label(groupLambda4, 0);
-		label5l = new Label(groupLambda5, 0);
-		scale3 = new Scale(groupLambda3, 0);
-		scale4 = new Scale(groupLambda4, 0);
-		scale5 = new Scale(groupLambda5, 0);
-		label3r = new Label(groupLambda3, 0);
-		label4r = new Label(groupLambda4, 0);
-		label5r = new Label(groupLambda5, 0);
+		label3l = new Label(groupLambda3, SWT.NONE);
+		label4l = new Label(groupLambda4, SWT.NONE);
+		label5l = new Label(groupLambda5, SWT.NONE);
+		scale3 = new Scale(groupLambda3, SWT.NONE);
+		scale4 = new Scale(groupLambda4, SWT.NONE);
+		scale5 = new Scale(groupLambda5, SWT.NONE);
+		label3r = new Label(groupLambda3, SWT.NONE);
+		label4r = new Label(groupLambda4, SWT.NONE);
+		label5r = new Label(groupLambda5, SWT.NONE);
 		buttonExec = new Button(groupLambda6, SWT.PUSH);
-		progress = new ProgressBar(groupLambda6, 0);
+		progress = new ProgressBar(groupLambda6, SWT.BORDER);
 
 		groupCanvas = new Composite(shell, SWT.NONE);
 		canvas1 = new Canvas(groupCanvas, SWT.BORDER);
 		canvas2 = new Canvas(groupCanvas, SWT.BORDER);
+		tip = new ToolTip(shell, 0);
 	}
 
 	protected void initLayouts() {
@@ -224,6 +230,9 @@ public class Window {
 		progress.setMinimum(0);
 		progress.setMaximum(LayoutInfo.scaleStep2);
 		progress.setSelection(0);
+
+		canvas1.setBackgroundMode(SWT.INHERIT_FORCE);
+		canvas2.setBackgroundMode(SWT.INHERIT_FORCE);
 	}
 
 	protected void initOpenFile(Label label, Text text, Button button) {
@@ -287,21 +296,26 @@ public class Window {
 					widget.setText(fileName);
 					widget.setSelection(fileName.length());
 
-					if (e.widget == button1a && text1b.getText().isEmpty()) {
-						text1b.setText(fileName + MiscInfo.outputExt);
-						text1b.setSelection(fileName.length()
-								+ MiscInfo.outputExt.length());
+					if (e.widget == button1a) {
+						if (text1b.getText().isEmpty()) {
+							text1b.setText(fileName + MiscInfo.outputExt);
+							text1b.setSelection(fileName.length()
+									+ MiscInfo.outputExt.length());
+						}
+
 						try {
 							calc.loadFile1(fileName);
 						} catch (final FileNotFoundException e1) {
 							e1.printStackTrace();
 						}
 						canvas1.redraw();
-					} else if (e.widget == button2a
-							&& text2b.getText().isEmpty()) {
-						text2b.setText(fileName + MiscInfo.outputExt);
-						text2b.setSelection(fileName.length()
-								+ MiscInfo.outputExt.length());
+					} else if (e.widget == button2a) {
+						if (text2b.getText().isEmpty()) {
+							text2b.setText(fileName + MiscInfo.outputExt);
+							text2b.setSelection(fileName.length()
+									+ MiscInfo.outputExt.length());
+						}
+
 						try {
 							calc.loadFile2(fileName);
 						} catch (final FileNotFoundException e1) {
@@ -424,6 +438,72 @@ public class Window {
 		};
 		canvas1.addPaintListener(drawEvent);
 		canvas2.addPaintListener(drawEvent);
+
+		final MouseMoveListener queryEvent = new MouseMoveListener() {
+			@Override
+			public void mouseMove(MouseEvent e) {
+				AbstractMatrix<Float> source;
+				AbstractMatrix<Float> dest;
+
+				if (e.widget == canvas1) {
+					source = calc.source1;
+					dest = calc.dest1;
+				} else if (e.widget == canvas2) {
+					source = calc.source2;
+					dest = calc.dest2;
+				} else {
+					// Never reach
+					source = null;
+					dest = null;
+
+					assert false;
+				}
+
+				if (source != null && dest != null && e.x < source.xSize()
+						&& e.y < source.ySize()) {
+					assert dest.xSize() == source.xSize();
+					assert dest.ySize() == source.ySize();
+
+					String data = String.format("Pos: (%d, %d)", e.x, e.y); //$NON-NLS-1$
+					if (source.get(e.x, e.y) > 0) {
+						data += String.format("\nValue: %.6f", //$NON-NLS-1$
+								source.get(e.x, e.y));
+					}
+					if (dest.get(e.x, e.y) > 0) {
+						data += String.format("\nPredicted: %.6f", //$NON-NLS-1$
+								dest.get(e.x, e.y));
+					}
+
+					tip.setText(data);
+					tip.setAutoHide(true);
+					tip.setVisible(true);
+				}
+			}
+		};
+		canvas1.addMouseMoveListener(queryEvent);
+		canvas2.addMouseMoveListener(queryEvent);
+
+		final MouseTrackListener queryExitListener = new MouseTrackListener() {
+			@Override
+			public void mouseEnter(MouseEvent arg0) {
+				// Nothing
+
+			}
+
+			@Override
+			public void mouseExit(MouseEvent arg0) {
+				tip.setVisible(false);
+			}
+
+			@Override
+			public void mouseHover(MouseEvent arg0) {
+				// Nothing
+
+			}
+		};
+		canvas1.addMouseTrackListener(queryExitListener);
+		canvas2.addMouseTrackListener(queryExitListener);
+
 	}
 
 	protected void initSetLambda(Label label1, Scale scale, Label label2) {
