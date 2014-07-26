@@ -6,13 +6,17 @@ import java.io.IOException;
 import matrix_math.AbstractMatrix;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
@@ -28,6 +32,7 @@ import performance_calc.FileCalcContainer;
 public class Window {
 	protected Display display;
 	protected Shell shell;
+
 	protected Group groupFile;
 	protected Composite groupFile1a;
 	protected Composite groupFile1b;
@@ -45,6 +50,7 @@ public class Window {
 	protected Button button1b;
 	protected Button button2a;
 	protected Button button2b;
+
 	protected Group groupLambda;
 	protected Composite groupLambda3;
 	protected Composite groupLambda4;
@@ -61,6 +67,10 @@ public class Window {
 	protected Scale scale5;
 	protected Button buttonExec;
 	protected ProgressBar progress;
+
+	protected Composite groupCanvas;
+	protected Canvas canvas1;
+	protected Canvas canvas2;
 
 	protected FileCalcContainer calc;
 
@@ -113,6 +123,10 @@ public class Window {
 		label5r = new Label(groupLambda5, 0);
 		buttonExec = new Button(groupLambda6, SWT.PUSH);
 		progress = new ProgressBar(groupLambda6, 0);
+
+		groupCanvas = new Composite(shell, SWT.NONE);
+		canvas1 = new Canvas(groupCanvas, SWT.BORDER);
+		canvas2 = new Canvas(groupCanvas, SWT.BORDER);
 	}
 
 	protected void initLayouts() {
@@ -135,12 +149,27 @@ public class Window {
 				* LayoutInfo.border;
 		groupLambda.setLayoutData(groupLambdaPos);
 
+		final FormData groupCanvasPos = new FormData();
+		groupCanvasPos.left = new FormAttachment(0, LayoutInfo.border);
+		assert groupFilePos.height == groupLambdaPos.height;
+		groupCanvasPos.top = new FormAttachment(groupFile, LayoutInfo.border,
+				SWT.BOTTOM);
+		groupCanvasPos.right = new FormAttachment(100, -LayoutInfo.border);
+		groupCanvasPos.bottom = new FormAttachment(100, -LayoutInfo.border);
+		groupCanvas.setLayoutData(groupCanvasPos);
+
 		final FillLayout groupLayout = new FillLayout(SWT.VERTICAL);
 		groupLayout.marginWidth = LayoutInfo.border;
 		groupLayout.marginHeight = LayoutInfo.border;
 		groupLayout.spacing = LayoutInfo.border;
 		groupFile.setLayout(groupLayout);
 		groupLambda.setLayout(groupLayout);
+
+		final FillLayout groupLayout2 = new FillLayout(SWT.VERTICAL);
+		groupLayout2.marginWidth = 0;
+		groupLayout2.marginHeight = 0;
+		groupLayout2.spacing = LayoutInfo.border;
+		groupCanvas.setLayout(groupLayout2);
 
 		groupFile1a.setLayout(new FormLayout());
 		groupFile1b.setLayout(new FormLayout());
@@ -318,10 +347,83 @@ public class Window {
 					} catch (final IOException e1) {
 						e1.printStackTrace();
 					}
+					canvas1.redraw();
+					canvas2.redraw();
 				}
 			}
 		};
 		buttonExec.addSelectionListener(execEvent);
+
+		final PaintListener drawEvent = new PaintListener() {
+			@Override
+			public void paintControl(PaintEvent e) {
+				AbstractMatrix<Float> source;
+				AbstractMatrix<Float> dest;
+				Float max = 1.0f;
+
+				if (e.widget == canvas1) {
+					source = calc.source1;
+					dest = calc.dest1;
+				} else if (e.widget == canvas2) {
+					source = calc.source2;
+					dest = calc.dest2;
+				} else {
+					// Never reach
+					source = null;
+					dest = null;
+
+					assert false;
+				}
+
+				// TODO change window size
+
+				if (source != null && dest != null) {
+					assert dest.xSize() == source.xSize();
+					assert dest.ySize() == source.ySize();
+
+					for (int y = 0; y < source.ySize(); ++y) {
+						for (int x = 0; x < source.xSize(); ++x) {
+							if (source.get(x, y) > max) {
+								max = source.get(x, y);
+							}
+
+							if (dest.get(x, y) > max) {
+								max = dest.get(x, y);
+							}
+						}
+					}
+
+					max = (float) Math.sqrt(max);
+					final int depth = MiscInfo.colorStep - 1;
+					final Float scale = depth / max;
+
+					for (int y = 0; y < source.ySize(); ++y) {
+						for (int x = 0; x < source.xSize(); ++x) {
+							final Color color;
+							Float value = source.get(x, y);
+
+							if (value > 0) {
+								value = (float) (Math.sqrt(value) * scale);
+								color = new Color(display, depth
+										- Math.round(value), depth, depth
+										- Math.round(value));
+							} else {
+								value = dest.get(x, y);
+								value = (float) (Math.sqrt(value) * scale);
+								color = new Color(display, depth
+										- Math.round(value), depth
+										- Math.round(value), depth);
+							}
+
+							e.gc.setForeground(color);
+							e.gc.drawPoint(x, y);
+						}
+					}
+				}
+			}
+		};
+		canvas1.addPaintListener(drawEvent);
+		canvas2.addPaintListener(drawEvent);
 	}
 
 	protected void initSetLambda(Label label1, Scale scale, Label label2) {
