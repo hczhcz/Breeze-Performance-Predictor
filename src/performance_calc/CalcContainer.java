@@ -1,9 +1,6 @@
 package performance_calc;
 
-import java.io.IOException;
-
 import matrix_math.AbstractMatrix;
-import matrix_math.FileMatrix;
 import matrix_math.MatrixScanner;
 import matrix_math.X2YMatrix;
 import matrix_math.Y2XMatrix;
@@ -240,22 +237,5 @@ public class CalcContainer extends MatrixScanner<Float> {
 		data2.PhraseRemixing(data1, lambda2);
 		data1.PhrasePredictedValue(dest1, lambdaXY);
 		data2.PhrasePredictedValue(dest2, lambdaXY);
-	}
-
-	public void calcFile(Float lambda1, Float lambda2, Float lambdaXY,
-			String sourceFile1, String sourceFile2, String destFile1,
-			String destFile2, Progress progress) throws IOException {
-		final FileMatrix<Float> source1 = new FloatFileMatrix(sourceFile1);
-		final FileMatrix<Float> source2 = new FloatFileMatrix(sourceFile2);
-		final FileMatrix<Float> dest1 = new FloatFileMatrix(source1.xSize(),
-				source1.ySize());
-		final FileMatrix<Float> dest2 = new FloatFileMatrix(source2.xSize(),
-				source2.ySize());
-
-		calc(lambda1, lambda2, lambdaXY, source1, source2, dest1, dest2,
-				progress);
-
-		dest1.saveToFile(destFile1);
-		dest2.saveToFile(destFile2);
 	}
 }

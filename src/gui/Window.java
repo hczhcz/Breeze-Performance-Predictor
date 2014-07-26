@@ -1,6 +1,9 @@
 package gui;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+
+import matrix_math.AbstractMatrix;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -20,7 +23,7 @@ import org.eclipse.swt.widgets.Scale;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import performance_calc.CalcContainer;
+import performance_calc.FileCalcContainer;
 
 public class Window {
 	protected Display display;
@@ -59,12 +62,16 @@ public class Window {
 	protected Button buttonExec;
 	protected ProgressBar progress;
 
+	protected FileCalcContainer calc;
+
 	public Window() {
+		calc = new FileCalcContainer();
+
 		initWidgets();
 		initLayouts();
 		initInnerLayouts();
 		initStyle();
-		initEvent();
+		initEvents();
 	}
 
 	protected void initWidgets() {
@@ -217,7 +224,7 @@ public class Window {
 		label.setAlignment(SWT.RIGHT);
 	}
 
-	protected void initEvent() {
+	protected void initEvents() {
 		final SelectionAdapter browseEvent = new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -255,11 +262,23 @@ public class Window {
 						text1b.setText(fileName + MiscInfo.outputExt);
 						text1b.setSelection(fileName.length()
 								+ MiscInfo.outputExt.length());
+						try {
+							calc.loadFile1(fileName);
+						} catch (final FileNotFoundException e1) {
+							e1.printStackTrace();
+						}
+						canvas1.redraw();
 					} else if (e.widget == button2a
 							&& text2b.getText().isEmpty()) {
 						text2b.setText(fileName + MiscInfo.outputExt);
 						text2b.setSelection(fileName.length()
 								+ MiscInfo.outputExt.length());
+						try {
+							calc.loadFile2(fileName);
+						} catch (final FileNotFoundException e1) {
+							e1.printStackTrace();
+						}
+						canvas2.redraw();
 					}
 				}
 			}
@@ -285,20 +304,17 @@ public class Window {
 		final SelectionAdapter execEvent = new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				final CalcContainer calc = new CalcContainer();
-
 				if (text1a.getText().isEmpty() || text1b.getText().isEmpty()
 						|| text2a.getText().isEmpty()
 						|| text2b.getText().isEmpty()) {
 					// TODO error msg
 				} else {
+					calc.calcFile(scale3.getSelection() * LayoutInfo.scaleUnit,
+							scale4.getSelection() * LayoutInfo.scaleUnit,
+							scale5.getSelection() * LayoutInfo.scaleUnit,
+							new SWTProgress(progress));
 					try {
-						calc.calcFile(scale3.getSelection()
-								* LayoutInfo.scaleUnit, scale4.getSelection()
-								* LayoutInfo.scaleUnit, scale5.getSelection()
-								* LayoutInfo.scaleUnit, text1a.getText(),
-								text2a.getText(), text1b.getText(),
-								text2b.getText(), new SWTProgress(progress));
+						calc.saveFile(text1b.getText(), text2b.getText());
 					} catch (final IOException e1) {
 						e1.printStackTrace();
 					}
