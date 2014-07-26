@@ -96,6 +96,9 @@ public class CalcContainer extends MatrixScanner<Float> {
 			pr.put(x * y);
 			pr.put(x * y);
 			pr.put(x * y);
+
+			// Reset
+			pr.did(0);
 		}
 
 		protected void PhraseAverage() {

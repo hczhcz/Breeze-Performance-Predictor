@@ -13,7 +13,6 @@ public abstract class Progress {
 		_progress = 0;
 		_pNow = 0;
 		_pTotal = 0;
-		onProgress(0);
 	}
 
 	public float getReal() {

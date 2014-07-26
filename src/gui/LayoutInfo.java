@@ -16,5 +16,5 @@ public final class LayoutInfo {
 
 	public static final int scaleStep = 100;
 	public static final float scaleUnit = 1.0f / scaleStep;
-	public static final int scaleStep2 = 200;
+	public static final int scaleStep2 = 500;
 }

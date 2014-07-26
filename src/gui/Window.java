@@ -46,6 +46,7 @@ public class Window {
 	protected Composite groupLambda3;
 	protected Composite groupLambda4;
 	protected Composite groupLambda5;
+	protected Composite groupLambda6;
 	protected Label label3l;
 	protected Label label3r;
 	protected Label label4l;
@@ -80,19 +81,20 @@ public class Window {
 		label1b = new Label(groupFile1b, 0);
 		label2a = new Label(groupFile2a, 0);
 		label2b = new Label(groupFile2b, 0);
-		text1a = new Text(groupFile1a, 0);
-		text1b = new Text(groupFile1b, 0);
-		text2a = new Text(groupFile2a, 0);
-		text2b = new Text(groupFile2b, 0);
-		button1a = new Button(groupFile1a, 0);
-		button1b = new Button(groupFile1b, 0);
-		button2a = new Button(groupFile2a, 0);
-		button2b = new Button(groupFile2b, 0);
+		text1a = new Text(groupFile1a, SWT.BORDER);
+		text1b = new Text(groupFile1b, SWT.BORDER);
+		text2a = new Text(groupFile2a, SWT.BORDER);
+		text2b = new Text(groupFile2b, SWT.BORDER);
+		button1a = new Button(groupFile1a, SWT.PUSH);
+		button1b = new Button(groupFile1b, SWT.PUSH);
+		button2a = new Button(groupFile2a, SWT.PUSH);
+		button2b = new Button(groupFile2b, SWT.PUSH);
 
 		groupLambda = new Group(shell, 0);
 		groupLambda3 = new Composite(groupLambda, SWT.NONE);
 		groupLambda4 = new Composite(groupLambda, SWT.NONE);
 		groupLambda5 = new Composite(groupLambda, SWT.NONE);
+		groupLambda6 = new Composite(groupLambda, SWT.NONE);
 		label3l = new Label(groupLambda3, 0);
 		label4l = new Label(groupLambda4, 0);
 		label5l = new Label(groupLambda5, 0);
@@ -102,9 +104,8 @@ public class Window {
 		label3r = new Label(groupLambda3, 0);
 		label4r = new Label(groupLambda4, 0);
 		label5r = new Label(groupLambda5, 0);
-		buttonExec = new Button(groupLambda, 0);
-
-		progress = new ProgressBar(shell, 0);
+		buttonExec = new Button(groupLambda6, SWT.PUSH);
+		progress = new ProgressBar(groupLambda6, 0);
 	}
 
 	protected void initLayouts() {
@@ -127,13 +128,6 @@ public class Window {
 				* LayoutInfo.border;
 		groupLambda.setLayoutData(groupLambdaPos);
 
-		final FormData progressPos = new FormData();
-		progressPos.left = new FormAttachment(0, LayoutInfo.border);
-		progressPos.right = new FormAttachment(100, -LayoutInfo.border);
-		progressPos.bottom = new FormAttachment(100, -LayoutInfo.border);
-		progressPos.height = LayoutInfo.stdHeight;
-		progress.setLayoutData(progressPos);
-
 		final FillLayout groupLayout = new FillLayout(SWT.VERTICAL);
 		groupLayout.marginWidth = LayoutInfo.border;
 		groupLayout.marginHeight = LayoutInfo.border;
@@ -148,6 +142,7 @@ public class Window {
 		groupLambda3.setLayout(new FormLayout());
 		groupLambda4.setLayout(new FormLayout());
 		groupLambda5.setLayout(new FormLayout());
+		groupLambda6.setLayout(new FormLayout());
 	}
 
 	protected void initInnerLayouts() {
@@ -159,9 +154,11 @@ public class Window {
 		initSetLambda(label3l, scale3, label3r);
 		initSetLambda(label4l, scale4, label4r);
 		initSetLambda(label5l, scale5, label5r);
+		initExec(progress, buttonExec);
 	}
 
 	protected void initStyle() {
+		// groupFile.setText("Files");
 		label1a.setText("Input 1");
 		label1b.setText("Output 1");
 		label2a.setText("Input 2");
@@ -170,6 +167,8 @@ public class Window {
 		button1b.setText("Browse ...");
 		button2a.setText("Browse ...");
 		button2b.setText("Browse ...");
+
+		// groupLambda.setText("Prediction");
 		label3l.setText("Mix SIM-2");
 		label4l.setText("Mix SIM-1");
 		label5l.setText("Y-based");
@@ -328,13 +327,30 @@ public class Window {
 
 		final FormData rPos = new FormData();
 		rPos.top = new FormAttachment(0, LayoutInfo.borderLabel);
-		rPos.right = new FormAttachment(100, -LayoutInfo.borderLabel);
-		rPos.bottom = new FormAttachment(100);
+		rPos.right = new FormAttachment(100);
+		rPos.bottom = new FormAttachment(100, -LayoutInfo.borderLabel);
 		rPos.width = LayoutInfo.stdWidth;
 		label2.setLayoutData(rPos);
 
 		label1.setAlignment(SWT.RIGHT);
 		label2.setAlignment(SWT.LEFT);
+	}
+
+	protected void initExec(ProgressBar progressBar, Button exec) {
+		final FormData lmPos = new FormData();
+		lmPos.left = new FormAttachment(0);
+		lmPos.top = new FormAttachment(0);
+		lmPos.right = new FormAttachment(100, -LayoutInfo.stdWidth
+				- LayoutInfo.border);
+		lmPos.bottom = new FormAttachment(100);
+		progressBar.setLayoutData(lmPos);
+
+		final FormData rPos = new FormData();
+		rPos.top = new FormAttachment(0);
+		rPos.right = new FormAttachment(100);
+		rPos.bottom = new FormAttachment(100);
+		rPos.width = LayoutInfo.stdWidth;
+		exec.setLayoutData(rPos);
 	}
 
 	public void exec() {
