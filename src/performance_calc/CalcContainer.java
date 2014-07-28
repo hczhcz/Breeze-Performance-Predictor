@@ -177,22 +177,22 @@ public class CalcContainer extends MatrixScanner<Float> {
 			reduceX2Y(yMixedSim, yTotalSim, MathToolSet.add);
 
 			xPSum = new Data(x, y);
-			for (int i = 0; i < x; ++i) {
-				final AbstractMatrix<Float> mulMapX = new Data(x, y);
-				mapY2X(xAbove, new Y2XMatrix<Float>(xSim, i), mulMapX,
+			for (int i = 0; i < y; ++i) {
+				final AbstractMatrix<Float> mulMapX = new Data(x, x);
+				mapX2Y(xMixedSim, new Y2XMatrix<Float>(xAbove, i), mulMapX,
 						MathToolSet.mul);
 
-				reduceX2Y(mulMapX, new X2YMatrix<Float>(xPSum, i),
+				reduceY2X(mulMapX, new Y2XMatrix<Float>(xPSum, i),
 						MathToolSet.add);
 			}
 
 			yPSum = new Data(x, y);
-			for (int i = 0; i < y; ++i) {
-				final AbstractMatrix<Float> mulMapY = new Data(x, y);
-				mapX2Y(yAbove, new X2YMatrix<Float>(ySim, i), mulMapY,
+			for (int i = 0; i < x; ++i) {
+				final AbstractMatrix<Float> mulMapY = new Data(y, y);
+				mapY2X(yMixedSim, new X2YMatrix<Float>(yAbove, i), mulMapY,
 						MathToolSet.mul);
 
-				reduceY2X(mulMapY, new Y2XMatrix<Float>(yPSum, i),
+				reduceX2Y(mulMapY, new X2YMatrix<Float>(yPSum, i),
 						MathToolSet.add);
 			}
 
