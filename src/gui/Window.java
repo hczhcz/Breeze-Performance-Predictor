@@ -401,9 +401,10 @@ public class Window {
 								max = source.get(x, y);
 							}
 
-							if (dest.get(x, y) > max) {
-								max = dest.get(x, y);
-							}
+							/*
+							 * if (dest.get(x, y) > max) { max = dest.get(x, y);
+							 * }
+							 */
 						}
 					}
 
@@ -418,12 +419,22 @@ public class Window {
 
 							if (value > 0) {
 								value = (float) (Math.sqrt(value) * scale);
+
+								if (value > depth) {
+									value = (float) depth;
+								}
+
 								color = new Color(display, depth
 										- Math.round(value), depth, depth
 										- Math.round(value));
 							} else {
 								value = dest.get(x, y);
+
 								value = (float) (Math.sqrt(value) * scale);
+								if (value > depth) {
+									value = (float) depth;
+								}
+
 								color = new Color(display, depth
 										- Math.round(value), depth
 										- Math.round(value), depth);
@@ -442,41 +453,45 @@ public class Window {
 		final MouseMoveListener queryEvent = new MouseMoveListener() {
 			@Override
 			public void mouseMove(MouseEvent e) {
-				AbstractMatrix<Float> source;
-				AbstractMatrix<Float> dest;
+				try {
+					AbstractMatrix<Float> source;
+					AbstractMatrix<Float> dest;
 
-				if (e.widget == canvas1) {
-					source = calc.source1;
-					dest = calc.dest1;
-				} else if (e.widget == canvas2) {
-					source = calc.source2;
-					dest = calc.dest2;
-				} else {
-					// Never reach
-					source = null;
-					dest = null;
+					if (e.widget == canvas1) {
+						source = calc.source1;
+						dest = calc.dest1;
+					} else if (e.widget == canvas2) {
+						source = calc.source2;
+						dest = calc.dest2;
+					} else {
+						// Never reach
+						source = null;
+						dest = null;
 
-					assert false;
-				}
-
-				if (source != null && dest != null && e.x < source.xSize()
-						&& e.y < source.ySize()) {
-					assert dest.xSize() == source.xSize();
-					assert dest.ySize() == source.ySize();
-
-					String data = String.format("Pos: (%d, %d)", e.x, e.y); //$NON-NLS-1$
-					if (source.get(e.x, e.y) > 0) {
-						data += String.format("\nValue: %.6f", //$NON-NLS-1$
-								source.get(e.x, e.y));
-					}
-					if (dest.get(e.x, e.y) > 0) {
-						data += String.format("\nPredicted: %.6f", //$NON-NLS-1$
-								dest.get(e.x, e.y));
+						assert false;
 					}
 
-					tip.setText(data);
-					tip.setAutoHide(true);
-					tip.setVisible(true);
+					if (source != null && dest != null && e.x < source.xSize()
+							&& e.y < source.ySize()) {
+						assert dest.xSize() == source.xSize();
+						assert dest.ySize() == source.ySize();
+
+						String data = String.format("Pos: (%d, %d)", e.x, e.y); //$NON-NLS-1$
+						if (source.get(e.x, e.y) > 0) {
+							data += String.format("\nValue: %.6f", //$NON-NLS-1$
+									source.get(e.x, e.y));
+						}
+						if (dest.get(e.x, e.y) > 0) {
+							data += String.format("\nPredicted: %.6f", //$NON-NLS-1$
+									dest.get(e.x, e.y));
+						}
+
+						tip.setText(data);
+						tip.setAutoHide(true);
+						tip.setVisible(true);
+					}
+				} finally {
+					//
 				}
 			}
 		};
