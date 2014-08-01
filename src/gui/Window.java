@@ -201,19 +201,19 @@ public class Window {
 
 	protected void initStyle() {
 		// groupFile.setText("Files");
-		label1a.setText("Input 1");
-		label1b.setText("Output 1");
-		label2a.setText("Input 2");
-		label2b.setText("Output 2");
-		button1a.setText("Browse ...");
-		button1b.setText("Browse ...");
-		button2a.setText("Browse ...");
-		button2b.setText("Browse ...");
+		label1a.setText(Messages.getString("Window.1a")); //$NON-NLS-1$
+		label1b.setText(Messages.getString("Window.1b")); //$NON-NLS-1$
+		label2a.setText(Messages.getString("Window.2a")); //$NON-NLS-1$
+		label2b.setText(Messages.getString("Window.2b")); //$NON-NLS-1$
+		button1a.setText(Messages.getString("Window.b")); //$NON-NLS-1$
+		button1b.setText(Messages.getString("Window.b")); //$NON-NLS-1$
+		button2a.setText(Messages.getString("Window.b")); //$NON-NLS-1$
+		button2b.setText(Messages.getString("Window.b")); //$NON-NLS-1$
 
 		// groupLambda.setText("Prediction");
-		label3l.setText("Mix SIM-2");
-		label4l.setText("Mix SIM-1");
-		label5l.setText("Y-based");
+		label3l.setText(Messages.getString("Window.3l")); //$NON-NLS-1$
+		label4l.setText(Messages.getString("Window.4l")); //$NON-NLS-1$
+		label5l.setText(Messages.getString("Window.5l")); //$NON-NLS-1$
 		scale3.setMinimum(0);
 		scale3.setMaximum(LayoutInfo.scaleStep);
 		scale3.setSelection(LayoutInfo.scaleStep * 3 / 4);
@@ -223,10 +223,10 @@ public class Window {
 		scale5.setMinimum(0);
 		scale5.setMaximum(LayoutInfo.scaleStep);
 		scale5.setSelection(LayoutInfo.scaleStep / 2);
-		label3r.setText("Keep SIM-1");
-		label4r.setText("Keep SIM-2");
-		label5r.setText("X-based");
-		buttonExec.setText("Go");
+		label3r.setText(Messages.getString("Window.3r")); //$NON-NLS-1$
+		label4r.setText(Messages.getString("Window.4r")); //$NON-NLS-1$
+		label5r.setText(Messages.getString("Window.5r")); //$NON-NLS-1$
+		buttonExec.setText(Messages.getString("Window.go")); //$NON-NLS-1$
 		progress.setMinimum(0);
 		progress.setMaximum(LayoutInfo.scaleStep2);
 		progress.setSelection(0);
