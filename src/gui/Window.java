@@ -69,6 +69,9 @@ public class Window {
 	protected Scale scale3;
 	protected Scale scale4;
 	protected Scale scale5;
+	protected Button checkbox1;
+	protected Button checkbox2;
+	protected Button checkbox3;
 
 	protected Composite groupExec;
 	protected Button buttonExec;
@@ -128,6 +131,9 @@ public class Window {
 		label3r = new Label(groupLambda3, SWT.NONE);
 		label4r = new Label(groupLambda4, SWT.NONE);
 		label5r = new Label(groupLambda5, SWT.NONE);
+		checkbox1 = new Button(groupLambda6, SWT.CHECK);
+		checkbox2 = new Button(groupLambda6, SWT.CHECK);
+		checkbox3 = new Button(groupLambda6, SWT.CHECK);
 
 		groupExec = new Composite(shell, SWT.NONE);
 		buttonExec = new Button(groupExec, SWT.PUSH);
@@ -189,6 +195,11 @@ public class Window {
 		groupLayout2.spacing = LayoutInfo.border;
 		groupCanvas.setLayout(groupLayout2);
 
+		final FillLayout horizontalLayout = new FillLayout(SWT.HORIZONTAL);
+		horizontalLayout.marginWidth = 0;
+		horizontalLayout.marginHeight = 0;
+		horizontalLayout.spacing = LayoutInfo.border;
+
 		groupFile1a.setLayout(new FormLayout());
 		groupFile1b.setLayout(new FormLayout());
 		groupFile2a.setLayout(new FormLayout());
@@ -196,7 +207,7 @@ public class Window {
 		groupLambda3.setLayout(new FormLayout());
 		groupLambda4.setLayout(new FormLayout());
 		groupLambda5.setLayout(new FormLayout());
-		groupLambda6.setLayout(new FormLayout());
+		groupLambda6.setLayout(horizontalLayout);
 		groupExec.setLayout(new FormLayout());
 	}
 
@@ -240,6 +251,11 @@ public class Window {
 		label3r.setText(Messages.getString("Window.3r")); //$NON-NLS-1$
 		label4r.setText(Messages.getString("Window.4r")); //$NON-NLS-1$
 		label5r.setText(Messages.getString("Window.5r")); //$NON-NLS-1$
+		checkbox1.setText(Messages.getString("Window.o0")); //$NON-NLS-1$
+		checkbox2.setText(Messages.getString("Window.o1")); //$NON-NLS-1$
+		checkbox2.setSelection(true);
+		checkbox3.setText(Messages.getString("Window.o2")); //$NON-NLS-1$
+		checkbox3.setSelection(true);
 
 		buttonExec.setText(Messages.getString("Window.go")); //$NON-NLS-1$
 		progress.setMinimum(0);
