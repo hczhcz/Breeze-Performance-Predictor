@@ -7,8 +7,8 @@ public final class LayoutInfo {
 	public static final int stdWidth = 80;
 	public static final int stdHeight = 24;
 
-	public static final int windowWidth = 720;
-	public static final int windowHeight = 480;
+	public static final int windowWidth = 736;
+	public static final int windowHeight = 512;
 
 	public static final int border = 8;
 	public static final int borderHalf = 4;

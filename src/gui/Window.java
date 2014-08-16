@@ -69,6 +69,8 @@ public class Window {
 	protected Scale scale3;
 	protected Scale scale4;
 	protected Scale scale5;
+
+	protected Composite groupExec;
 	protected Button buttonExec;
 	protected ProgressBar progress;
 
@@ -126,8 +128,10 @@ public class Window {
 		label3r = new Label(groupLambda3, SWT.NONE);
 		label4r = new Label(groupLambda4, SWT.NONE);
 		label5r = new Label(groupLambda5, SWT.NONE);
-		buttonExec = new Button(groupLambda6, SWT.PUSH);
-		progress = new ProgressBar(groupLambda6, SWT.BORDER);
+
+		groupExec = new Composite(shell, SWT.NONE);
+		buttonExec = new Button(groupExec, SWT.PUSH);
+		progress = new ProgressBar(groupExec, SWT.BORDER);
 
 		groupCanvas = new Composite(shell, SWT.NONE);
 		canvas1 = new Canvas(groupCanvas, SWT.BORDER);
@@ -155,10 +159,18 @@ public class Window {
 				* LayoutInfo.border;
 		groupLambda.setLayoutData(groupLambdaPos);
 
+		final FormData groupExecPos = new FormData();
+		groupExecPos.left = new FormAttachment(0, LayoutInfo.border);
+		groupExecPos.top = new FormAttachment(groupFile, LayoutInfo.border,
+				SWT.BOTTOM);
+		groupExecPos.right = new FormAttachment(100, -LayoutInfo.border);
+		groupExecPos.height = LayoutInfo.stdHeight;
+		groupExec.setLayoutData(groupExecPos);
+
 		final FormData groupCanvasPos = new FormData();
 		groupCanvasPos.left = new FormAttachment(0, LayoutInfo.border);
 		assert groupFilePos.height == groupLambdaPos.height;
-		groupCanvasPos.top = new FormAttachment(groupFile, LayoutInfo.border,
+		groupCanvasPos.top = new FormAttachment(groupExec, LayoutInfo.border,
 				SWT.BOTTOM);
 		groupCanvasPos.right = new FormAttachment(100, -LayoutInfo.border);
 		groupCanvasPos.bottom = new FormAttachment(100, -LayoutInfo.border);
@@ -185,6 +197,7 @@ public class Window {
 		groupLambda4.setLayout(new FormLayout());
 		groupLambda5.setLayout(new FormLayout());
 		groupLambda6.setLayout(new FormLayout());
+		groupExec.setLayout(new FormLayout());
 	}
 
 	protected void initInnerLayouts() {
@@ -196,6 +209,7 @@ public class Window {
 		initSetLambda(label3l, scale3, label3r);
 		initSetLambda(label4l, scale4, label4r);
 		initSetLambda(label5l, scale5, label5r);
+
 		initExec(progress, buttonExec);
 	}
 
@@ -226,6 +240,7 @@ public class Window {
 		label3r.setText(Messages.getString("Window.3r")); //$NON-NLS-1$
 		label4r.setText(Messages.getString("Window.4r")); //$NON-NLS-1$
 		label5r.setText(Messages.getString("Window.5r")); //$NON-NLS-1$
+
 		buttonExec.setText(Messages.getString("Window.go")); //$NON-NLS-1$
 		progress.setMinimum(0);
 		progress.setMaximum(LayoutInfo.scaleStep2);
