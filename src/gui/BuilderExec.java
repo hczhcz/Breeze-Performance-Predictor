@@ -80,7 +80,8 @@ public class BuilderExec extends GUIBuilder {
 					// TODO error msg
 				} else {
 					calc.calcFile(contentLambda.get3(), contentLambda.get4(),
-							contentLambda.get5(), new SWTProgress(progress));
+							contentLambda.get5(), new SWTProgress(progress),
+							contentLambda.getOptions());
 					try {
 						calc.saveFile(contentFile.get1b(), contentFile.get2b());
 					} catch (final IOException e1) {

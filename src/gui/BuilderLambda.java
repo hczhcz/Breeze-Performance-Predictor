@@ -151,4 +151,10 @@ public class BuilderLambda extends GUIBuilder {
 	public float get5() {
 		return scale5.getSelection() * LayoutInfo.scaleUnit;
 	}
+
+	public int getOptions() {
+		return (checkbox1.getSelection() ? 1 : 0)
+				| (checkbox2.getSelection() ? 2 : 0)
+				| (checkbox3.getSelection() ? 4 : 0);
+	}
 }

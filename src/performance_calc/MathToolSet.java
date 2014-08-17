@@ -112,6 +112,13 @@ public final class MathToolSet {
 		}
 	};
 
+	public final static FuncBase sqrt = new FuncBase() {
+		@Override
+		public Float f(Float a) {
+			return (float) Math.sqrt(a);
+		}
+	};
+
 	public final static FuncBase rSqrt = new FuncBase() {
 		@Override
 		public Float f(Float a) {

@@ -34,9 +34,9 @@ public class FileCalcContainer extends CalcContainer {
 	}
 
 	public void calcFile(Float lambda1, Float lambda2, Float lambdaXY,
-			Progress progress) {
+			Progress progress, int options) {
 		calc(lambda1, lambda2, lambdaXY, source1, source2, dest1, dest2,
-				progress);
+				progress, options);
 
 		onChanged1();
 		onChanged2();

@@ -15,7 +15,7 @@ public class NonGUIMain {
 		try {
 			calc.loadFile1("in1.txt"); //$NON-NLS-1$
 			calc.loadFile2("in2.txt"); //$NON-NLS-1$
-			calc.calcFile(0.5f, 0.5f, 0.5f, new PrintProgress());
+			calc.calcFile(0.5f, 0.5f, 0.5f, new PrintProgress(), 0);
 			calc.saveFile("out1.txt", "out2.txt"); //$NON-NLS-1$ //$NON-NLS-2$
 		} catch (final IOException e) {
 			e.printStackTrace();

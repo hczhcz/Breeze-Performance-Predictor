@@ -20,7 +20,7 @@ public class CalcContainer extends MatrixScanner<Float> {
 		final protected int x;
 		final protected int y;
 
-		protected AbstractMatrix<Float> exist;
+		protected AbstractMatrix<Float> mainData;
 
 		protected AbstractMatrix<Float> xSum;
 		protected AbstractMatrix<Float> ySum;
@@ -48,6 +48,8 @@ public class CalcContainer extends MatrixScanner<Float> {
 		protected AbstractMatrix<Float> yPAbove;
 		protected AbstractMatrix<Float> xPValue;
 		protected AbstractMatrix<Float> yPValue;
+
+		protected AbstractMatrix<Float> resultData;
 
 		protected DataBlock(AbstractMatrix<Float> source) {
 			input = source;
@@ -98,16 +100,23 @@ public class CalcContainer extends MatrixScanner<Float> {
 			pr.did(0);
 		}
 
-		protected void PhraseAverage() {
+		protected void PhraseAverage(boolean sqrtFiltering) {
+			if (sqrtFiltering) {
+				mainData = new Data(x, y);
+				map(input, mainData, MathToolSet.sqrt);
+			} else {
+				mainData = input;
+			}
+
 			xSum = new Data(x, 1);
 			ySum = new Data(1, y);
-			reduceY2X(input, xSum, MathToolSet.add);
-			reduceX2Y(input, ySum, MathToolSet.add);
+			reduceY2X(mainData, xSum, MathToolSet.add);
+			reduceX2Y(mainData, ySum, MathToolSet.add);
 
 			xCount = new Data(x, 1);
 			yCount = new Data(1, y);
-			reduceY2X(input, xCount, MathToolSet.add.apply(MathToolSet.bool));
-			reduceX2Y(input, yCount, MathToolSet.add.apply(MathToolSet.bool));
+			reduceY2X(mainData, xCount, MathToolSet.add.apply(MathToolSet.bool));
+			reduceX2Y(mainData, yCount, MathToolSet.add.apply(MathToolSet.bool));
 
 			xAve = new Data(x, 1);
 			yAve = new Data(1, y);
@@ -116,16 +125,29 @@ public class CalcContainer extends MatrixScanner<Float> {
 
 			xAbove = new Data(x, y);
 			yAbove = new Data(x, y);
-			mapY2X(input, xAve, xAbove, MathToolSet.sub.boolCond());
-			mapX2Y(input, yAve, yAbove, MathToolSet.sub.boolCond());
+			mapY2X(mainData, xAve, xAbove, MathToolSet.sub.boolCond());
+			mapX2Y(mainData, yAve, yAbove, MathToolSet.sub.boolCond());
 		}
 
-		protected void PhraseSimilarity() {
+		protected void PhraseSimilarity(boolean intersection) {
+			AbstractMatrix<Float> xAboveRef;
+			AbstractMatrix<Float> yAboveRef;
+
+			if (intersection) {
+				xAboveRef = yAbove;
+				yAboveRef = xAbove;
+			} else {
+				xAboveRef = xAbove;
+				yAboveRef = yAbove;
+			}
+
 			xSqrSum = new Data(x, 1);
 			ySqrSum = new Data(1, y);
-			// notice: swap xAbove and yAbove
-			reduceY2X(yAbove, xSqrSum, MathToolSet.add.apply(MathToolSet.sqr));
-			reduceX2Y(xAbove, ySqrSum, MathToolSet.add.apply(MathToolSet.sqr));
+
+			reduceY2X(xAboveRef, xSqrSum,
+					MathToolSet.add.apply(MathToolSet.sqr));
+			reduceX2Y(yAboveRef, ySqrSum,
+					MathToolSet.add.apply(MathToolSet.sqr));
 
 			xSimBase = new Data(x, 1);
 			ySimBase = new Data(1, y);
@@ -136,8 +158,7 @@ public class CalcContainer extends MatrixScanner<Float> {
 			xSimWeight = new Data(x, x);
 			for (int i = 0; i < x; ++i) {
 				final AbstractMatrix<Float> mulMapX = new Data(x, y);
-				// notice: swap xAbove and yAbove
-				mapX2Y(yAbove, new X2YMatrix<Float>(yAbove, i), mulMapX,
+				mapX2Y(xAboveRef, new X2YMatrix<Float>(yAbove, i), mulMapX,
 						MathToolSet.mul);
 
 				reduceY2X(mulMapX, new Y2XMatrix<Float>(xSimWeight, i),
@@ -148,8 +169,7 @@ public class CalcContainer extends MatrixScanner<Float> {
 			ySimWeight = new Data(y, y);
 			for (int i = 0; i < y; ++i) {
 				final AbstractMatrix<Float> mulMapY = new Data(x, y);
-				// notice: swap xAbove and yAbove
-				mapY2X(xAbove, new Y2XMatrix<Float>(xAbove, i), mulMapY,
+				mapY2X(yAboveRef, new Y2XMatrix<Float>(xAbove, i), mulMapY,
 						MathToolSet.mul);
 
 				reduceX2Y(mulMapY, new X2YMatrix<Float>(ySimWeight, i),
@@ -170,7 +190,7 @@ public class CalcContainer extends MatrixScanner<Float> {
 		}
 
 		protected void PhrasePredictedValue(AbstractMatrix<Float> dest,
-				Float lambda) {
+				Float lambda, boolean autoLambda, boolean sqrtFiltering) {
 			xTotalSim = new Data(x, 1);
 			yTotalSim = new Data(1, y);
 			reduceY2X(xMixedSim, xTotalSim, MathToolSet.add);
@@ -206,14 +226,42 @@ public class CalcContainer extends MatrixScanner<Float> {
 			mapY2X(xPAbove, xAve, xPValue, MathToolSet.add.boolCond());
 			mapX2Y(yPAbove, yAve, yPValue, MathToolSet.add.boolCond());
 
-			each(xPValue, yPValue, dest, MathToolSet.mix(lambda, false));
+			if (sqrtFiltering) {
+				resultData = new Data(x, y);
+			} else {
+				resultData = dest;
+			}
+
+			if (autoLambda) {
+				final AbstractMatrix<Float> lambdaMapX = new Data(x, y);
+				final AbstractMatrix<Float> lambdaMapY = new Data(x, y);
+				mapY2X(xPValue, xAve, lambdaMapX, MathToolSet.mul);
+				mapX2Y(yPValue, yAve, lambdaMapY, MathToolSet.mul);
+
+				final AbstractMatrix<Float> lambdaMapSum = new Data(x, y);
+				each(lambdaMapX, lambdaMapY, lambdaMapSum, MathToolSet.add);
+
+				final AbstractMatrix<Float> lambdaMapBase = new Data(x, y);
+				// notice: reuse
+				mapY2X(lambdaMapBase, xAve, lambdaMapBase, MathToolSet.add);
+				mapX2Y(lambdaMapBase, yAve, lambdaMapBase, MathToolSet.add);
+
+				each(lambdaMapSum, lambdaMapBase, resultData, MathToolSet.div);
+			} else {
+				each(xPValue, yPValue, resultData,
+						MathToolSet.mix(lambda, false));
+			}
+
+			if (sqrtFiltering) {
+				map(resultData, dest, MathToolSet.sqr);
+			}
 		}
 	}
 
 	public void calc(Float lambda1, Float lambda2, Float lambdaXY,
 			AbstractMatrix<Float> source1, AbstractMatrix<Float> source2,
 			AbstractMatrix<Float> dest1, AbstractMatrix<Float> dest2,
-			Progress progress) {
+			Progress progress, int options) {
 		assert source2.xSize() == source1.xSize();
 		assert source2.ySize() == source1.ySize();
 		assert dest1.xSize() == source1.xSize();
@@ -229,13 +277,17 @@ public class CalcContainer extends MatrixScanner<Float> {
 		data1.AddProgress();
 		data2.AddProgress();
 
-		data1.PhraseAverage();
-		data2.PhraseAverage();
-		data1.PhraseSimilarity();
-		data2.PhraseSimilarity();
+		data1.PhraseAverage((options & CalcInfo.sqrtFiltering) != 0);
+		data2.PhraseAverage((options & CalcInfo.sqrtFiltering) != 0);
+		data1.PhraseSimilarity((options & CalcInfo.intersection) != 0);
+		data2.PhraseSimilarity((options & CalcInfo.intersection) != 0);
 		data1.PhraseRemixing(data2, lambda1);
 		data2.PhraseRemixing(data1, lambda2);
-		data1.PhrasePredictedValue(dest1, lambdaXY);
-		data2.PhrasePredictedValue(dest2, lambdaXY);
+		data1.PhrasePredictedValue(dest1, lambdaXY,
+				(options & CalcInfo.autoLambda) != 0,
+				(options & CalcInfo.sqrtFiltering) != 0);
+		data2.PhrasePredictedValue(dest2, lambdaXY,
+				(options & CalcInfo.autoLambda) != 0,
+				(options & CalcInfo.sqrtFiltering) != 0);
 	}
 }
