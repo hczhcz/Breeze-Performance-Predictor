@@ -8,6 +8,6 @@ public class GUIMain {
 	public static void main(String[] args) {
 		final Window window = new Window();
 
-		window.exec();
+		window.show();
 	}
 }

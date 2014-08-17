@@ -597,7 +597,7 @@ public class Window {
 		exec.setLayoutData(rPos);
 	}
 
-	public void exec() {
+	public void show() {
 		shell.setSize(LayoutInfo.windowWidth, LayoutInfo.windowHeight);
 		shell.open();
 
