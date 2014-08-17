@@ -124,61 +124,65 @@ public class BuilderFile extends GUIBuilder {
 		final SelectionAdapter browseEvent = new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				final Text widget;
-				final int mode;
-
-				if (e.widget == button1a) {
-					widget = text1a;
-					mode = SWT.OPEN;
-				} else if (e.widget == button1b) {
-					widget = text1b;
-					mode = SWT.SAVE;
-				} else if (e.widget == button2a) {
-					widget = text2a;
-					mode = SWT.OPEN;
-				} else if (e.widget == button2b) {
-					widget = text2b;
-					mode = SWT.SAVE;
-				} else {
-					// Never reach
-					widget = null;
-					mode = 0;
-
-					assert false;
-				}
-
-				final FileDialog dialog = new FileDialog(shell, mode);
-
-				final String fileName = dialog.open();
-				if (fileName != null && widget != null) {
-					widget.setText(fileName);
-					widget.setSelection(fileName.length());
+				try {
+					final Text widget;
+					final int mode;
 
 					if (e.widget == button1a) {
-						if (text1b.getText().isEmpty()) {
-							text1b.setText(fileName + MiscInfo.outputExt);
-							text1b.setSelection(fileName.length()
-									+ MiscInfo.outputExt.length());
-						}
-
-						try {
-							calc.loadFile1(fileName);
-						} catch (final FileNotFoundException e1) {
-							e1.printStackTrace();
-						}
+						widget = text1a;
+						mode = SWT.OPEN;
+					} else if (e.widget == button1b) {
+						widget = text1b;
+						mode = SWT.SAVE;
 					} else if (e.widget == button2a) {
-						if (text2b.getText().isEmpty()) {
-							text2b.setText(fileName + MiscInfo.outputExt);
-							text2b.setSelection(fileName.length()
-									+ MiscInfo.outputExt.length());
-						}
+						widget = text2a;
+						mode = SWT.OPEN;
+					} else if (e.widget == button2b) {
+						widget = text2b;
+						mode = SWT.SAVE;
+					} else {
+						// Never reach
+						widget = null;
+						mode = 0;
 
-						try {
-							calc.loadFile2(fileName);
-						} catch (final FileNotFoundException e1) {
-							e1.printStackTrace();
+						assert false;
+					}
+
+					final FileDialog dialog = new FileDialog(shell, mode);
+
+					final String fileName = dialog.open();
+					if (fileName != null && widget != null) {
+						widget.setText(fileName);
+						widget.setSelection(fileName.length());
+
+						if (e.widget == button1a) {
+							if (text1b.getText().isEmpty()) {
+								text1b.setText(fileName + MiscInfo.outputExt);
+								text1b.setSelection(fileName.length()
+										+ MiscInfo.outputExt.length());
+							}
+
+							try {
+								calc.loadFile1(fileName);
+							} catch (final FileNotFoundException e1) {
+								// e1.printStackTrace();
+							}
+						} else if (e.widget == button2a) {
+							if (text2b.getText().isEmpty()) {
+								text2b.setText(fileName + MiscInfo.outputExt);
+								text2b.setSelection(fileName.length()
+										+ MiscInfo.outputExt.length());
+							}
+
+							try {
+								calc.loadFile2(fileName);
+							} catch (final FileNotFoundException e1) {
+								// e1.printStackTrace();
+							}
 						}
 					}
+				} finally {
+					// Nothing
 				}
 			}
 		};

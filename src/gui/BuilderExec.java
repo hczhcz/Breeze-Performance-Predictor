@@ -73,20 +73,26 @@ public class BuilderExec extends GUIBuilder {
 		final SelectionAdapter execEvent = new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if (contentFile.get1a().isEmpty()
-						|| contentFile.get1b().isEmpty()
-						|| contentFile.get2a().isEmpty()
-						|| contentFile.get2b().isEmpty()) {
-					// TODO error msg
-				} else {
-					calc.calcFile(contentLambda.get3(), contentLambda.get4(),
-							contentLambda.get5(), new SWTProgress(progress),
-							contentLambda.getOptions());
-					try {
-						calc.saveFile(contentFile.get1b(), contentFile.get2b());
-					} catch (final IOException e1) {
-						e1.printStackTrace();
+				try {
+					if (contentFile.get1a().isEmpty()
+							|| contentFile.get1b().isEmpty()
+							|| contentFile.get2a().isEmpty()
+							|| contentFile.get2b().isEmpty()) {
+						// TODO error msg
+					} else {
+						calc.calcFile(contentLambda.get3(),
+								contentLambda.get4(), contentLambda.get5(),
+								new SWTProgress(progress),
+								contentLambda.getOptions());
+						try {
+							calc.saveFile(contentFile.get1b(),
+									contentFile.get2b());
+						} catch (final IOException e1) {
+							e1.printStackTrace();
+						}
 					}
+				} finally {
+					// Nothing
 				}
 			}
 		};

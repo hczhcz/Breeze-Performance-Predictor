@@ -60,79 +60,83 @@ public class BuilderCanvas extends GUIBuilder {
 		final PaintListener drawEvent = new PaintListener() {
 			@Override
 			public void paintControl(PaintEvent e) {
-				AbstractMatrix<Float> source;
-				AbstractMatrix<Float> dest;
-				Float max = 1.0f;
+				try {
+					AbstractMatrix<Float> source;
+					AbstractMatrix<Float> dest;
+					Float max = 1.0f;
 
-				if (e.widget == canvas1) {
-					source = calc.source1;
-					dest = calc.dest1;
-				} else if (e.widget == canvas2) {
-					source = calc.source2;
-					dest = calc.dest2;
-				} else {
-					// Never reach
-					source = null;
-					dest = null;
+					if (e.widget == canvas1) {
+						source = calc.source1;
+						dest = calc.dest1;
+					} else if (e.widget == canvas2) {
+						source = calc.source2;
+						dest = calc.dest2;
+					} else {
+						// Never reach
+						source = null;
+						dest = null;
 
-					assert false;
-				}
-
-				// TODO change window size
-
-				if (source != null && dest != null) {
-					assert dest.xSize() == source.xSize();
-					assert dest.ySize() == source.ySize();
-
-					for (int y = 0; y < source.ySize(); ++y) {
-						for (int x = 0; x < source.xSize(); ++x) {
-							if (source.get(x, y) > max) {
-								max = source.get(x, y);
-							}
-
-							/*
-							 * if (dest.get(x, y) > max) { max = dest.get(x, y);
-							 * }
-							 */
-						}
+						assert false;
 					}
 
-					max = (float) Math.sqrt(max);
-					final int depth = MiscInfo.colorStep - 1;
-					final Float scale = depth / max;
+					// TODO change window size
 
-					for (int y = 0; y < source.ySize(); ++y) {
-						for (int x = 0; x < source.xSize(); ++x) {
-							final Color color;
-							Float value = source.get(x, y);
+					if (source != null && dest != null) {
+						assert dest.xSize() == source.xSize();
+						assert dest.ySize() == source.ySize();
 
-							if (value > 0) {
-								value = (float) (Math.sqrt(value) * scale);
-
-								if (value > depth) {
-									value = (float) depth;
+						for (int y = 0; y < source.ySize(); ++y) {
+							for (int x = 0; x < source.xSize(); ++x) {
+								if (source.get(x, y) > max) {
+									max = source.get(x, y);
 								}
 
-								color = new Color(display, depth
-										- Math.round(value), depth, depth
-										- Math.round(value));
-							} else {
-								value = dest.get(x, y);
-
-								value = (float) (Math.sqrt(value) * scale);
-								if (value > depth) {
-									value = (float) depth;
-								}
-
-								color = new Color(display, depth
-										- Math.round(value), depth
-										- Math.round(value), depth);
+								/*
+								 * if (dest.get(x, y) > max) { max = dest.get(x,
+								 * y); }
+								 */
 							}
+						}
 
-							e.gc.setForeground(color);
-							e.gc.drawPoint(x, y);
+						max = (float) Math.sqrt(max);
+						final int depth = MiscInfo.colorStep - 1;
+						final Float scale = depth / max;
+
+						for (int y = 0; y < source.ySize(); ++y) {
+							for (int x = 0; x < source.xSize(); ++x) {
+								final Color color;
+								Float value = source.get(x, y);
+
+								if (value > 0) {
+									value = (float) (Math.sqrt(value) * scale);
+
+									if (value > depth) {
+										value = (float) depth;
+									}
+
+									color = new Color(display, depth
+											- Math.round(value), depth, depth
+											- Math.round(value));
+								} else {
+									value = dest.get(x, y);
+
+									value = (float) (Math.sqrt(value) * scale);
+									if (value > depth) {
+										value = (float) depth;
+									}
+
+									color = new Color(display, depth
+											- Math.round(value), depth
+											- Math.round(value), depth);
+								}
+
+								e.gc.setForeground(color);
+								e.gc.drawPoint(x, y);
+							}
 						}
 					}
+				} finally {
+					// Nothing
 				}
 			}
 		};
@@ -180,7 +184,7 @@ public class BuilderCanvas extends GUIBuilder {
 						tip.setVisible(true);
 					}
 				} finally {
-					//
+					// Nothing
 				}
 			}
 		};
@@ -196,7 +200,11 @@ public class BuilderCanvas extends GUIBuilder {
 
 			@Override
 			public void mouseExit(MouseEvent arg0) {
-				tip.setVisible(false);
+				try {
+					tip.setVisible(false);
+				} finally {
+					// Nothing
+				}
 			}
 
 			@Override

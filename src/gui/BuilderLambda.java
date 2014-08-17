@@ -129,10 +129,14 @@ public class BuilderLambda extends GUIBuilder {
 		final SelectionAdapter scaleEvent = new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				final Scale widget = (Scale) e.widget;
+				try {
+					final Scale widget = (Scale) e.widget;
 
-				widget.setToolTipText(String.format("%.2f / 1.00", //$NON-NLS-1$
-						widget.getSelection() * LayoutInfo.scaleUnit));
+					widget.setToolTipText(String.format("%.2f / 1.00", //$NON-NLS-1$
+							widget.getSelection() * LayoutInfo.scaleUnit));
+				} finally {
+					// Nothing
+				}
 			}
 		};
 		scale3.addSelectionListener(scaleEvent);
