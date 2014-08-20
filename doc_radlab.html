@@ -1,0 +1,52 @@
+<html>
+<head>
+<meta http-equiv='content-type' content='text/html; charset=utf-8' />
+</head>
+<body>
+<h1>使用说明</h1>
+<p>左上“Input 1”和“Input 2”分别打开<strong>输入文件</strong>（在<code>./data</code>有样例）。可以手动指定<strong>输出文件</strong>“Output 1”和“Output 2”。</p>
+<p>右上第一个拖动条控制计算过程中，<em>文件1</em>的相似度关系表从<em>文件2</em>的相似度关系表中混合的比例。向左表示<strong>混合</strong>更多，向右表示<strong>保持</strong>更多。</p>
+<p>右上第二个拖动条类似于第一个，即<em>文件2</em>的相似度关系表从<em>文件1</em>的相似度关系表中混合的比例。</p>
+<p>右上第三个拖动条是同一文件各<em>X坐标</em>（服务）之间和各<em>Y坐标</em>（用户）之间的相似度关系表的依赖比例，即原paper中的<em>Lambda值</em>。向左表示计算过程更多依赖<strong>用户相似度</strong>，向右表示更多依赖<strong>服务相似度</strong>。</p>
+<p>选项中，“Auto Lambda”表示不使用固定的<em>Lambda值</em>、而使用一个经验公式完成计算；“Sqrt Filtering”表示在计算前对输入开根号、在计算后对结果平方；“Intersection”表示在计算相似度时，使用对于<em>Y</em>（用户）而言<em>X</em>（服务）的特征计算<em>X</em>（服务）相似度、使用对于<em>X</em>而言<em>Y</em>的特征计算<em>Y</em>相似度，若不勾选则相反。</p>
+<p>设置完毕后，点击<strong>“Go”</strong>即开始计算，进度条表示计算进度。</p>
+<p>两张图表是<strong>深度图</strong>，横坐标为<em>X</em>（服务），纵坐标为<em>Y</em>（用户），分别表示第一、第二组结果中各个值的大小。绿色表示已知的值，蓝色表示预测的值，颜色越深表示数值越大。将鼠标放到图上指向数据点，可查看各个点的数据。</p>
+<h1>文件格式</h1>
+<p>文件第一行两个整数，分别代表<em>X坐标</em>和<em>Y坐标</em>的大小，之后共有<em>Y</em>行，每行<em>X</em>个数据。</p>
+<p>每个数据点即为已知数据的平均值，若值<strong>为零</strong>则表示该点未知。</p>
+<h1>源码结构</h1>
+<h2>math</h2>
+<p>封装了数学函数、操作符等。</p>
+<p><code>MathFunc</code>是函数，<code>MathOper</code>是二元操作符。</p>
+<p>包中提供了三个辅助工具：</p>
+<ul>
+<li><code>ConditionalOper</code>判断，如果第一个操作数大于0则计算。</li>
+<li><code>CurryingFunc</code>对二元操作符的第二个操作数进行<em>科里化</em>，例如<code>x+y</code>变为<code>x+1</code>。</li>
+<li><code>AppliedOper</code>将一元函数和二元操作符组合使用。</li>
+</ul>
+<h2>matrix_math</h2>
+<p>“矩阵”之名是为了方便称呼，<strong>实质是二位数组的封装</strong>。</p>
+<p><code>FileMatrix</code>提供文件IO，<code>X2YMatrix</code>和<code>Y2XMatrix</code>分别将一个<code>x*y</code>的矩阵取一行或一列，变成<code>1*y</code>和<code>x*1</code>的。</p>
+<p>包中提供了一些迭代工具，包括逐个元素应用函数、操作符，逐行或逐列的<em>map</em>和<em>reduce</em>操作，见<code>MatrixScanner</code>。</p>
+<h2>performance_calc</h2>
+<p>建立在<code>math</code>和<code>matrix_math</code>上，主要的<strong>计算的逻辑</strong>。将数据类型定为<code>Float</code>，之前的包是泛型的。</p>
+<p>计算的逻辑见<code>CalcContainer</code>。</p>
+<p><code>MathToolSet</code>提供了一些数学函数、操作符的实现。</p>
+<p><code>Progress</code>提供了一个进度条底层抽象供UI使用。</p>
+<h2>non_gui</h2>
+<p>命令行前端，用于调试。</p>
+<h2>gui</h2>
+<p><strong>图形化前端，基于SWT。</strong></p>
+<p><code>Builder</code>相关类封装了<strong>建立用户界面</strong>的代码，可向<code>BuilderAll</code>构造器传入一个使用<code>FormLayout</code>的<code>Composite</code>类用来装载界面内容。</p>
+<p><code>Window</code>封装了一个窗口，直接将窗口作为界面内容的容器，<code>BuilderAll</code>画出完整界面。若需要将界面内容嵌入其它地方，做法类似，可以参考这里的实现。</p>
+<p>四个模块：</p>
+<ul>
+<li><code>File</code>在左上角，打开、保存文件。</li>
+<li><code>Lambda</code>在右上角，各种设置。</li>
+<li><code>Exec</code>在中间，包括进度条和“Go”按钮。</li>
+<li><code>Canvas</code>即图表。</li>
+</ul>
+<p><code>Message</code>是自动生成的文件，<code>messages.properties</code>中存放GUI使用的字符串。</p>
+<h1>本文档</h1>
+<p>最后更新2014.08.20，<a href="&#x6d;&#x61;&#x69;&#108;&#116;&#x6f;&#58;&#104;&#46;&#x63;&#122;&#64;&#x71;&#x71;&#46;&#x63;&#x6f;&#x6d;">&#104;&#x63;&#122;</a>。</p>
+</body>
