@@ -193,18 +193,18 @@ public class BuilderFile extends GUIBuilder {
 	}
 
 	public String get1a() {
-		return button1a.getText();
+		return text1a.getText();
 	}
 
 	public String get1b() {
-		return button1b.getText();
+		return text1b.getText();
 	}
 
 	public String get2a() {
-		return button2a.getText();
+		return text2a.getText();
 	}
 
 	public String get2b() {
-		return button2b.getText();
+		return text2b.getText();
 	}
 }

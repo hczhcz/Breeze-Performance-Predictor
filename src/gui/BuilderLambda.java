@@ -107,13 +107,16 @@ public class BuilderLambda extends GUIBuilder {
 		label5l.setText(Messages.getString("Window.5l")); //$NON-NLS-1$
 		scale3.setMinimum(0);
 		scale3.setMaximum(LayoutInfo.scaleStep);
-		scale3.setSelection(LayoutInfo.scaleStep * 3 / 4);
+		scale3.setSelection(LayoutInfo.scaleStep * 3 / 4); // See initEvents()
+															// if changed
 		scale4.setMinimum(0);
 		scale4.setMaximum(LayoutInfo.scaleStep);
-		scale4.setSelection(LayoutInfo.scaleStep * 3 / 4);
+		scale4.setSelection(LayoutInfo.scaleStep * 3 / 4); // See initEvents()
+															// if changed
 		scale5.setMinimum(0);
 		scale5.setMaximum(LayoutInfo.scaleStep);
-		scale5.setSelection(LayoutInfo.scaleStep / 2);
+		scale5.setSelection(LayoutInfo.scaleStep / 2); // See initEvents()
+														// if changed
 		label3r.setText(Messages.getString("Window.3r")); //$NON-NLS-1$
 		label4r.setText(Messages.getString("Window.4r")); //$NON-NLS-1$
 		label5r.setText(Messages.getString("Window.5r")); //$NON-NLS-1$
@@ -142,6 +145,24 @@ public class BuilderLambda extends GUIBuilder {
 		scale3.addSelectionListener(scaleEvent);
 		scale4.addSelectionListener(scaleEvent);
 		scale5.addSelectionListener(scaleEvent);
+
+		scale3.setToolTipText("0.75 / 1.00"); //$NON-NLS-1$
+		scale4.setToolTipText("0.75 / 1.00"); //$NON-NLS-1$
+		scale5.setToolTipText("0.50 / 1.00"); //$NON-NLS-1$
+
+		final SelectionAdapter autoLambdaEvent = new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				assert e.widget == checkbox1;
+
+				try {
+					scale5.setEnabled(!checkbox1.getSelection());
+				} finally {
+					// Nothing
+				}
+			}
+		};
+		checkbox1.addSelectionListener(autoLambdaEvent);
 	}
 
 	public float get3() {

@@ -73,6 +73,8 @@ public class BuilderExec extends GUIBuilder {
 		final SelectionAdapter execEvent = new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				assert e.widget == buttonExec;
+
 				try {
 					if (contentFile.get1a().isEmpty()
 							|| contentFile.get1b().isEmpty()
