@@ -28,6 +28,18 @@ public class MatrixScanner<T extends Number> {
 		}
 	}
 
+	protected T reduce(AbstractMatrix<T> source, MathOper<T> oper, T start) {
+		T result = start;
+
+		for (int y = 0; y < source.ySize(); ++y) {
+			for (int x = 0; x < source.xSize(); ++x) {
+				result = oper.f(result, source.get(x, y));
+			}
+		}
+
+		return result;
+	}
+
 	protected void mapX2Y(AbstractMatrix<T> source, AbstractMatrix<T> line,
 			AbstractMatrix<T> dest, MathOper<T> oper) {
 		assert line.xSize() == 1;
