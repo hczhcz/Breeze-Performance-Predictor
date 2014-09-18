@@ -64,13 +64,13 @@ public abstract class FileMatrix<T extends Number> implements AbstractMatrix<T> 
 			final int x = _data.xSize();
 			final int y = _data.ySize();
 
-			writer.format("%d\t%d\n", x, y); //$NON-NLS-1$
+			writer.format("%d\t%d" + System.lineSeparator(), x, y); //$NON-NLS-1$
 
 			for (int y1 = 0; y1 < y; ++y1) {
 				for (int x1 = 0; x1 < x; ++x1) {
 					writeData(writer, _data.get(x1, y1));
 				}
-				writer.format("\n"); //$NON-NLS-1$
+				writer.format(System.lineSeparator()); //$NON-NLS-1$
 			}
 		}
 	}

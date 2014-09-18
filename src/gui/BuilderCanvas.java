@@ -171,11 +171,13 @@ public class BuilderCanvas extends GUIBuilder {
 
 						String data = String.format("Pos: (%d, %d)", e.x, e.y); //$NON-NLS-1$
 						if (source.get(e.x, e.y) > 0) {
-							data += String.format("\nValue: %.6f", //$NON-NLS-1$
+							data += String.format(System.lineSeparator()
+									+ "Value: %.6f", //$NON-NLS-1$
 									source.get(e.x, e.y));
 						}
 						if (dest.get(e.x, e.y) > 0) {
-							data += String.format("\nPredicted: %.6f", //$NON-NLS-1$
+							data += String.format(System.lineSeparator()
+									+ "Predicted: %.6f", //$NON-NLS-1$
 									dest.get(e.x, e.y));
 						}
 

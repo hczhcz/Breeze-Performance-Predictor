@@ -9,6 +9,6 @@ public class PrintProgress extends Progress {
 
 	@Override
 	protected void onProgress(int value) {
-		System.out.printf("Progress: %d%%\n", value); //$NON-NLS-1$
+		System.out.printf("Progress: %d%%" + System.lineSeparator(), value); //$NON-NLS-1$
 	}
 }
