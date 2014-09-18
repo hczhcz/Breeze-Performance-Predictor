@@ -132,14 +132,10 @@ public class BuilderLambda extends GUIBuilder {
 		final SelectionAdapter scaleEvent = new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				try {
-					final Scale widget = (Scale) e.widget;
+				final Scale widget = (Scale) e.widget;
 
-					widget.setToolTipText(String.format("%.2f / 1.00", //$NON-NLS-1$
-							widget.getSelection() * LayoutInfo.scaleUnit));
-				} finally {
-					// Nothing
-				}
+				widget.setToolTipText(String.format("%.2f / 1.00", //$NON-NLS-1$
+						widget.getSelection() * LayoutInfo.scaleUnit));
 			}
 		};
 		scale3.addSelectionListener(scaleEvent);
@@ -155,11 +151,7 @@ public class BuilderLambda extends GUIBuilder {
 			public void widgetSelected(SelectionEvent e) {
 				assert e.widget == checkbox1;
 
-				try {
-					scale5.setEnabled(!checkbox1.getSelection());
-				} finally {
-					// Nothing
-				}
+				scale5.setEnabled(!checkbox1.getSelection());
 			}
 		};
 		checkbox1.addSelectionListener(autoLambdaEvent);

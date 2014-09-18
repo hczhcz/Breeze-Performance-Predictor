@@ -135,8 +135,8 @@ public class BuilderCanvas extends GUIBuilder {
 							}
 						}
 					}
-				} finally {
-					// Nothing
+				} catch (final Exception err) {
+					// Ignore error
 				}
 			}
 		};
@@ -185,8 +185,8 @@ public class BuilderCanvas extends GUIBuilder {
 						tip.setAutoHide(true);
 						tip.setVisible(true);
 					}
-				} finally {
-					// Nothing
+				} catch (final Exception err) {
+					// Ignore error
 				}
 			}
 		};
@@ -202,11 +202,7 @@ public class BuilderCanvas extends GUIBuilder {
 
 			@Override
 			public void mouseExit(MouseEvent arg0) {
-				try {
-					tip.setVisible(false);
-				} finally {
-					// Nothing
-				}
+				tip.setVisible(false);
 			}
 
 			@Override

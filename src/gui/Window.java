@@ -47,12 +47,8 @@ public class Window extends GUIBuilder {
 		shell.open();
 
 		while (!shell.isDisposed()) {
-			try {
-				if (!display.readAndDispatch()) {
-					display.sleep();
-				}
-			} finally {
-				// Nothing
+			if (!display.readAndDispatch()) {
+				display.sleep();
 			}
 		}
 

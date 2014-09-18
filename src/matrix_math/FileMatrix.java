@@ -56,6 +56,8 @@ public abstract class FileMatrix<T extends Number> implements AbstractMatrix<T> 
 					_data.set(x1, y1, readData(reader));
 				}
 			}
+		} catch (final Exception e) {
+			// Ignore error
 		}
 	}
 
@@ -72,6 +74,8 @@ public abstract class FileMatrix<T extends Number> implements AbstractMatrix<T> 
 				}
 				writer.format(System.lineSeparator()); //$NON-NLS-1$
 			}
+		} catch (final Exception e) {
+			// Ignore error
 		}
 	}
 }
