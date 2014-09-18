@@ -24,11 +24,13 @@ public class BuilderAll extends GUIBuilder {
 	protected Group groupLambda;
 	protected Composite groupExec;
 	protected Composite groupCanvas;
+	protected Composite groupQuery;
 
 	protected BuilderFile contentFile;
 	protected BuilderLambda contentLambda;
 	protected BuilderExec contentExec;
 	protected BuilderCanvas contentCanvas;
+	protected BuilderQuery contentQuery;
 
 	public BuilderAll(Composite target, Display targetDisplay, Shell targetShell) {
 		super(target);
@@ -39,11 +41,13 @@ public class BuilderAll extends GUIBuilder {
 			@Override
 			public void onChanged1() {
 				contentCanvas.update1();
+				contentQuery.update();
 			}
 
 			@Override
 			public void onChanged2() {
 				contentCanvas.update2();
+				contentQuery.update();
 			}
 		};
 	}
@@ -54,6 +58,7 @@ public class BuilderAll extends GUIBuilder {
 		groupLambda = new Group(parent, 0);
 		groupExec = new Composite(parent, SWT.NONE);
 		groupCanvas = new Composite(parent, SWT.NONE);
+		groupQuery = new Group(parent, 0);
 
 		tip = new ToolTip(shell, 0);
 
@@ -62,11 +67,13 @@ public class BuilderAll extends GUIBuilder {
 		contentExec = new BuilderExec(groupExec, calc, contentFile,
 				contentLambda);
 		contentCanvas = new BuilderCanvas(groupCanvas, display, tip, calc);
+		contentQuery = new BuilderQuery(groupQuery, calc);
 
 		contentFile.initWidgets();
 		contentLambda.initWidgets();
 		contentExec.initWidgets();
 		contentCanvas.initWidgets();
+		contentQuery.initWidgets();
 	}
 
 	@Override
@@ -99,9 +106,19 @@ public class BuilderAll extends GUIBuilder {
 		assert groupFilePos.height == groupLambdaPos.height;
 		groupCanvasPos.top = new FormAttachment(groupExec, LayoutInfo.border,
 				SWT.BOTTOM);
-		groupCanvasPos.right = new FormAttachment(100, -LayoutInfo.border);
+		groupCanvasPos.right = new FormAttachment(100, -LayoutInfo.stdWidth - 4
+				* LayoutInfo.border);
 		groupCanvasPos.bottom = new FormAttachment(100, -LayoutInfo.border);
 		groupCanvas.setLayoutData(groupCanvasPos);
+
+		final FormData groupQueryPos = new FormData();
+		groupQueryPos.top = new FormAttachment(groupExec, LayoutInfo.border,
+				SWT.BOTTOM);
+		groupQueryPos.right = new FormAttachment(100, -LayoutInfo.border);
+		groupQueryPos.width = LayoutInfo.stdWidth + 2 * LayoutInfo.border;
+		groupQueryPos.height = 9 * LayoutInfo.stdHeight + 10
+				* LayoutInfo.border - 18 * LayoutInfo.borderLabel;
+		groupQuery.setLayoutData(groupQueryPos);
 
 		final FillLayout groupLayout = new FillLayout(SWT.VERTICAL);
 		groupLayout.marginWidth = LayoutInfo.border;
@@ -109,6 +126,7 @@ public class BuilderAll extends GUIBuilder {
 		groupLayout.spacing = LayoutInfo.border;
 		groupFile.setLayout(groupLayout);
 		groupLambda.setLayout(groupLayout);
+		groupQuery.setLayout(groupLayout);
 
 		groupExec.setLayout(new FormLayout());
 
@@ -116,6 +134,7 @@ public class BuilderAll extends GUIBuilder {
 		contentLambda.initLayouts();
 		contentExec.initLayouts();
 		contentCanvas.initLayouts();
+		contentQuery.initLayouts();
 	}
 
 	@Override
@@ -124,6 +143,7 @@ public class BuilderAll extends GUIBuilder {
 		contentLambda.initStyle();
 		contentExec.initStyle();
 		contentCanvas.initStyle();
+		contentQuery.initStyle();
 	}
 
 	@Override
@@ -132,5 +152,6 @@ public class BuilderAll extends GUIBuilder {
 		contentLambda.initEvents();
 		contentExec.initEvents();
 		contentCanvas.initEvents();
+		contentQuery.initEvents();
 	}
 }
